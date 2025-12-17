@@ -1091,7 +1091,7 @@
             }
             
             // Elemento a convertir
-            const element = document.getElementById('proformaPreview');
+            const element = document.querySelector('.proforma-preview-container');
             
             // Opciones para html2pdf
             const opt = {
@@ -1118,8 +1118,8 @@
         }
         
         // Función para descargar Word como un archivo .docx compatible
-        function downloadWord() {
-            if (!proformaGenerated) {
+        async function downloadWord() {
+             if (!proformaGenerated) {
                 alert("Por favor, genere primero la proforma.");
                 return;
             }
@@ -1130,43 +1130,26 @@
             wordBtn.innerHTML = '<span class="spinner"></span> Generando Word...';
             wordBtn.disabled = true;
             
-            // Crear contenido HTML para el documento Word, incluyendo estilos
-            const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
-                "xmlns:w='urn:schemas-microsoft-com:office:word' "+
-                "xmlns='http://www.w3.org/TR/REC-html40'>"+
-                "<head><meta charset='utf-8'><title>Proforma</title></head><body>";
-            const footer = "</body></html>";
-            
-            // Obtener el HTML de la previsualización
-            const proformaHTML = document.getElementById('proformaPreview').innerHTML;
+            try {
+                // Obtener el HTML de la previsualización
+                const proformaHTML = document.getElementById('proformaPreview').innerHTML;
+                
+                // Incluir los estilos directamente en el HTML para la conversión
+                const styles = Array.from(document.styleSheets).map(s => Array.from(s.cssRules).map(r => r.cssText).join('')).join('');
+                const fullHTML = `<style>${styles}</style>${proformaHTML}`;
 
-            // Extraer todos los estilos CSS de la página
-            const styles = Array.from(document.styleSheets)
-                .map(styleSheet => {
-                    try {
-                        return Array.from(styleSheet.cssRules)
-                            .map(rule => rule.cssText)
-                            .join('');
-                    } catch (e) {
-                        // Ignorar errores de hojas de estilo de origen cruzado
-                        return '';
-                    }
-                }).join('');
+                // Usar la librería html-to-docx para generar un Blob de un DOCX válido
+                const fileBuffer = await htmlToDocx(fullHTML, null, {
+                    orientation: 'portrait',
+                    margins: { top: 720, right: 720, bottom: 720, left: 720 } // Márgenes en twips (1 pulgada = 1440 twips)
+                });
 
-            const sourceHTML = `${header}<style>${styles}</style>${proformaHTML}${footer}`;
-            
-            // Crear un Blob con el contenido HTML
-            const blob = new Blob([sourceHTML], { type: 'text/html' });
-            
-            // Crear un enlace para descargar
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `proforma-${proformaNumber}.docx`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+                // Usar la librería FileSaver.js (incluida en html-to-docx) para guardar el archivo
+                saveAs(fileBuffer, `proforma-${proformaNumber}.docx`);
+            } catch (error) {
+                console.error('Error al generar el documento de Word:', error);
+                alert('Hubo un error al generar el archivo .docx. Por favor, intente de nuevo.');
+            }
             
             // Restaurar botón
             setTimeout(() => {
@@ -1187,5 +1170,7 @@
     </script>    
     <!-- Librerías para generar PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Librería para generar DOCX desde HTML -->
+    <script src="https://unpkg.com/html-to-docx@1.8.0/dist/html-to-docx.js"></script>
 </body>
 </html>

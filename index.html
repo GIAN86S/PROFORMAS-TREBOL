@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proforma Metalúrgica - Bolivia</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
+    <style>
+        /* RESET Y ESTILOS BASE */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #556B2F; /* Verde olivo */
+            --secondary-color: #333333;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #666666;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --error-color: #f44336;
+            --text-color: #222222;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* TIPOGRAFÍA */
+        h1, h2, h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            text-align: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        h3 {
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
+        
+        /* ESTRUCTURA PRINCIPAL */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-color);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        
+        @media (min-width: 992px) {
+            .container {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .proforma-preview-container {
+                grid-column: span 2;
+            }
+        }
+        
+        /* TARJETAS Y PANELES */
+        .panel {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .panel:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+        
+        /* FORMULARIOS */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+        
+        .required::after {
+            content: " *";
+            color: var(--error-color);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(85, 107, 47, 0.2);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        /* TABLA DE ÍTEMS */
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        
+        th {
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        tbody tr:hover {
+            background-color: rgba(85, 107, 47, 0.05);
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        /* BOTONES */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #445522;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: var(--dark-gray);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #555555;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #3d8b40;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background-color: var(--error-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+        
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-radius: 50%;
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        /* PREVISUALIZACIÓN DE PROFORMA */
+        .proforma-preview-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-top: 1rem;
+            border: 1px solid var(--medium-gray);
+            min-height: 500px;
+        }
+        
+        .proforma-header {
+            text-align: center;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .proforma-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .proforma-number {
+            font-size: 1.2rem;
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+        
+        .proforma-emisor, .proforma-destinatario {
+            margin-bottom: 2rem;
+        }
+        
+        .proforma-emisor h3, .proforma-destinatario h3 {
+            background-color: var(--light-gray);
+            padding: 0.5rem;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .proforma-table {
+            margin: 2rem 0;
+        }
+        
+        .proforma-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .proforma-totales {
+            margin-top: 2rem;
+            text-align: right;
+        }
+        
+        .proforma-totales table {
+            width: 300px;
+            margin-left: auto;
+            border: 1px solid var(--medium-gray);
+        }
+        
+        .proforma-totales td {
+            padding: 0.8rem;
+        }
+        
+        .proforma-totales tr:last-child {
+            font-weight: 700;
+            font-size: 1.2rem;
+            background-color: rgba(85, 107, 47, 0.1);
+        }
+        
+        .proforma-observaciones {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px dashed var(--medium-gray);
+        }
+        
+        .proforma-footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--medium-gray);
+        }
+        
+        /* MENSAJES Y VALIDACIONES */
+        .alert {
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+        }
+        
+        .alert-success {
+            background-color: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid var(--success-color);
+            color: #2e7d32;
+        }
+        
+        .alert-error {
+            background-color: rgba(244, 67, 54, 0.1);
+            border-left: 4px solid var(--error-color);
+            color: #c62828;
+        }
+        
+        .validation-error {
+            color: var(--error-color);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .validation-error.show {
+            display: block;
+        }
+        
+        /* SPINNER */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* ANIMACIONES */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        /* ESTILOS DE IMPRESIÓN */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            
+            .proforma-preview-container, .proforma-preview-container * {
+                visibility: visible;
+            }
+            
+            .proforma-preview-container {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .proforma-table th {
+                background-color: var(--primary-color) !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+        
+        /* FOOTER */
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--medium-gray);
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+        
+        /* UTILIDADES */
+        .text-right {
+            text-align: right;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .mt-1 { margin-top: 1rem; }
+        .mt-2 { margin-top: 2rem; }
+        .mb-1 { margin-bottom: 1rem; }
+        .mb-2 { margin-bottom: 2rem; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="no-print">
+        <header>
+            <div class="logo">🛠️</div>
+            <h1>Sistema de Proformas Metalúrgicas</h1>
+            <p>Genera proformas profesionales para productos y servicios de metalurgia en Bolivia</p>
+        </header>
+        
+        <div class="container">
+            <section class="panel">
+                <h2>Datos del Emisor</h2>
+                <div class="form-group">
+                    <label for="emisorNombre">Nombre Completo</label>
+                    <input type="text" id="emisorNombre" value="FRANZ RAFAEL MANGUIA IÑIGUEZ" readonly>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="emisorCI">CI</label>
+                        <input type="text" id="emisorCI" value="5045135" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="emisorCelular">Celular</label>
+                        <input type="text" id="emisorCelular" value="72971268" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="emisorBarrio">Barrio</label>
+                    <input type="text" id="emisorBarrio" value="Barrio San Gerónimo" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="emisorNIT">NIT Empresa (opcional)</label>
+                    <input type="text" id="emisorNIT" placeholder="Ej: 123456789">
+                </div>
+            </section>
+            
+            <section class="panel">
+                <h2>Datos del Destinatario</h2>
+                <div class="form-group">
+                    <label for="destinatarioNombre" class="required">Nombre o Razón Social</label>
+                    <input type="text" id="destinatarioNombre" placeholder="Ingrese nombre o razón social" required>
+                    <div class="validation-error" id="errorDestinatarioNombre">Ingrese el nombre o razón social.</div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="destinatarioCINIT">CI/NIT</label>
+                        <input type="text" id="destinatarioCINIT" placeholder="CI o NIT del destinatario">
+                    </div>
+                    <div class="form-group">
+                        <label for="destinatarioTelefono">Teléfono</label>
+                        <input type="text" id="destinatarioTelefono" placeholder="Teléfono de contacto">
+                    </div>
+                </div>
+            </section>
+            
+            <section class="panel proforma-preview-container">
+                <div id="proformaPreview">
+                    <!-- La previsualización de la proforma se generará aquí -->
+                </div>
+            </section>
+            
+            <section class="panel">
+                <h2>Detalles de Metalurgia</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="plazoEntrega">Plazo de Entrega (días)</label>
+                        <input type="number" id="plazoEntrega" min="0" value="15">
+                    </div>
+                    <div class="form-group">
+                        <label for="garantia">Garantía (meses)</label>
+                        <input type="number" id="garantia" min="0" value="12">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="validezOferta">Validez de la oferta (días)</label>
+                    <input type="number" id="validezOferta" min="1" value="30">
+                </div>
+                
+                <div class="form-group">
+                    <label for="lugarEntrega">Lugar de Entrega</label>
+                    <input type="text" id="lugarEntrega" value="Yacuiba, Bolivia">
+                </div>
+                
+                <div class="form-group">
+                    <label for="metodoPago">Método de Pago</label>
+                    <select id="metodoPago">
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia">Transferencia</option>
+                        <option value="QR">QR</option>
+                        <option value="Efectivo/Transferencia/QR">Efectivo, Transferencia o QR</option>
+                    </select>
+                </div>
+            </section>
+            
+            <section class="panel">
+                <h2>Ítems de la Proforma</h2>
+                <div class="table-container">
+                    <table id="itemsTable">
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Unidad</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario (Bs)</th>
+                                <th>Subtotal (Bs)</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTableBody">
+                            <!-- Los ítems se agregarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="text-center mt-2">
+                    <button id="addItemBtn" class="btn btn-primary">
+                        <span>+</span> Agregar Ítem
+                    </button>
+                </div>
+                
+                <div class="alert alert-error hidden" id="itemsError">
+                    Agregue al menos un ítem válido (cantidad y precio).
+                </div>
+            </section>
+            
+            <section class="panel">
+                <h2>Cálculos y Totales</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="descuento">Descuento (%)</label>
+                        <input type="number" id="descuento" min="0" max="100" value="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="recargo">Recargo (%)</label>
+                        <input type="number" id="recargo" min="0" value="0" step="0.01">
+                    </div>
+                </div>
+                
+                <div class="proforma-totales">
+                    <table>
+                        <tr>
+                            <td>Subtotal:</td>
+                            <td id="subtotalDisplay">Bs 0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Descuento:</td>
+                            <td id="descuentoDisplay">Bs 0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Recargo:</td>
+                            <td id="recargoDisplay">Bs 0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Total:</td>
+                            <td id="totalDisplay">Bs 0.00</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+            
+            <section class="panel">
+                <h2>Observaciones y Condiciones</h2>
+                <div class="form-group">
+                    <label for="observaciones">Observaciones</label>
+                    <textarea id="observaciones" rows="4" placeholder="Observaciones adicionales para la proforma..."></textarea>
+                </div>
+                
+                <div class="alert alert-success hidden" id="successMessage">
+                    Proforma generada exitosamente. Puede descargarla en los formatos disponibles.
+                </div>
+                
+                <div class="alert alert-error hidden" id="errorMessage">
+                    Complete los campos obligatorios antes de generar la proforma.
+                </div>
+                
+                <div class="btn-group">
+                    <button id="generateBtn" class="btn btn-primary">
+                        <span>📋</span> Generar Proforma
+                    </button>
+                    
+                    <button id="downloadPdfBtn" class="btn btn-success" disabled>
+                        <span>📄</span> Descargar PDF
+                    </button>
+                    
+                    <button id="downloadWordBtn" class="btn btn-secondary" disabled>
+                        <span>📝</span> Descargar Word
+                    </button>
+                    
+                    <button id="printBtn" class="btn">
+                        <span>🖨️</span> Imprimir
+                    </button>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <p>FRANZ RAFAEL MANGUIA IÑIGUEZ — CI 5045135 — Cel. 72971268 — Barrio San Gerónimo</p>
+            <p class="mt-1">Sistema de Proformas Metalúrgicas &copy; <span id="currentYear"></span></p>
+        </footer>
+    </div>
+
+    <script>
+        // Variables globales
+        let proformaNumber = localStorage.getItem('proformaNumber') || 1000;
+        let items = [];
+        let proformaGenerated = false;
+        
+        // Formateador de moneda para Bolivia
+        const formatter = new Intl.NumberFormat("es-BO", {
+            style: "currency",
+            currency: "BOB",
+            minimumFractionDigits: 2
+        });
+        
+        // Formateador de fecha para Bolivia
+        const dateFormatter = new Intl.DateTimeFormat("es-BO", {
+            timeZone: "America/La_Paz",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        });
+        
+        // Inicialización de la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            // Establecer año actual en el footer
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Cargar datos del destinatario desde localStorage si existen
+            loadLastDestinatario();
+            
+            // Agregar evento al botón de agregar ítem
+            document.getElementById('addItemBtn').addEventListener('click', addNewItem);
+            
+            // Agregar eventos a los botones principales
+            document.getElementById('generateBtn').addEventListener('click', generateProforma);
+            document.getElementById('downloadPdfBtn').addEventListener('click', downloadPDF);
+            document.getElementById('downloadWordBtn').addEventListener('click', downloadWord);
+            document.getElementById('printBtn').addEventListener('click', printProforma);
+            
+            // Agregar eventos para recalcular totales
+            document.getElementById('descuento').addEventListener('input', calculateTotals);
+            document.getElementById('recargo').addEventListener('input', calculateTotals);
+            
+            // Agregar un ítem inicial por defecto
+            addNewItem();
+            
+            // Calcular totales iniciales
+            calculateTotals();
+        });
+        
+        // Función para agregar un nuevo ítem a la tabla
+        function addNewItem() {
+            const itemId = Date.now() + Math.random();
+            const newItem = {
+                id: itemId,
+                descripcion: '',
+                unidad: 'unidad',
+                cantidad: 1,
+                precioUnitario: 0,
+                subtotal: 0
+            };
+            
+            items.push(newItem);
+            renderItemsTable();
+            
+            // Enfocar el campo de descripción del nuevo ítem
+            setTimeout(() => {
+                const input = document.querySelector(`[data-id="${itemId}"] input[name="descripcion"]`);
+                if (input) input.focus();
+            }, 10);
+        }
+        
+        // Función para eliminar un ítem
+        function deleteItem(itemId) {
+            items = items.filter(item => item.id !== itemId);
+            renderItemsTable();
+            calculateTotals();
+        }
+        
+        // Función para renderizar la tabla de ítems
+        function renderItemsTable() {
+            const tableBody = document.getElementById('itemsTableBody');
+            tableBody.innerHTML = '';
+            
+            if (items.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center">No hay ítems agregados. Use el botón "Agregar Ítem" para comenzar.</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            items.forEach(item => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', item.id);
+                row.innerHTML = `
+                    <td>
+                        <input type="text" name="descripcion" value="${item.descripcion}" placeholder="Descripción del producto/servicio">
+                    </td>
+                    <td>
+                        <select name="unidad">
+                            <option value="unidad" ${item.unidad === 'unidad' ? 'selected' : ''}>Unidad</option>
+                            <option value="kg" ${item.unidad === 'kg' ? 'selected' : ''}>Kilogramo</option>
+                            <option value="ton" ${item.unidad === 'ton' ? 'selected' : ''}>Tonelada</option>
+                            <option value="m" ${item.unidad === 'm' ? 'selected' : ''}>Metro</option>
+                            <option value="m2" ${item.unidad === 'm2' ? 'selected' : ''}>Metro cuadrado</option>
+                            <option value="m3" ${item.unidad === 'm3' ? 'selected' : ''}>Metro cúbico</option>
+                            <option value="juego" ${item.unidad === 'juego' ? 'selected' : ''}>Juego</option>
+                            <option value="par" ${item.unidad === 'par' ? 'selected' : ''}>Par</option>
+                            <option value="hr" ${item.unidad === 'hr' ? 'selected' : ''}>Hora</option>
+                            <option value="dia" ${item.unidad === 'dia' ? 'selected' : ''}>Día</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" name="cantidad" min="0" step="0.01" value="${item.cantidad}">
+                    </td>
+                    <td>
+                        <input type="number" name="precioUnitario" min="0" step="0.01" value="${item.precioUnitario}">
+                    </td>
+                    <td class="subtotal-cell">${formatter.format(item.subtotal)}</td>
+                    <td>
+                        <div class="item-actions">
+                            <button class="btn btn-danger btn-icon delete-item-btn" title="Eliminar ítem">
+                                <span>🗑️</span>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+                
+                // Agregar eventos a los inputs del ítem
+                const inputs = row.querySelectorAll('input, select');
+                inputs.forEach(input => {
+                    input.addEventListener('input', () => updateItem(item.id, input.name, input.value));
+                });
+                
+                // Agregar evento al botón de eliminar
+                row.querySelector('.delete-item-btn').addEventListener('click', () => deleteItem(item.id));
+            });
+        }
+        
+        // Función para actualizar un ítem
+        function updateItem(itemId, field, value) {
+            const item = items.find(item => item.id === itemId);
+            if (!item) return;
+            
+            if (field === 'descripcion') {
+                item.descripcion = value;
+            } else if (field === 'unidad') {
+                item.unidad = value;
+            } else if (field === 'cantidad') {
+                item.cantidad = parseFloat(value) || 0;
+            } else if (field === 'precioUnitario') {
+                item.precioUnitario = parseFloat(value) || 0;
+            }
+            
+            // Calcular subtotal
+            item.subtotal = item.cantidad * item.precioUnitario;
+            
+            // Actualizar la celda de subtotal
+            const row = document.querySelector(`tr[data-id="${itemId}"]`);
+            if (row) {
+                row.querySelector('.subtotal-cell').textContent = formatter.format(item.subtotal);
+            }
+            
+            // Recalcular totales
+            calculateTotals();
+        }
+        
+        // Función para calcular totales
+        function calculateTotals() {
+            // Calcular subtotal sumando todos los ítems
+            const subtotal = items.reduce((sum, item) => sum + item.subtotal, 0);
+            
+            // Obtener descuento y recargo
+            const descuentoPorcentaje = parseFloat(document.getElementById('descuento').value) || 0;
+            const recargoPorcentaje = parseFloat(document.getElementById('recargo').value) || 0;
+            
+            // Calcular montos de descuento y recargo
+            const descuentoMonto = subtotal * (descuentoPorcentaje / 100);
+            const recargoMonto = subtotal * (recargoPorcentaje / 100);
+            
+            // Calcular total
+            const total = subtotal - descuentoMonto + recargoMonto;
+            
+            // Actualizar displays
+            document.getElementById('subtotalDisplay').textContent = formatter.format(subtotal);
+            document.getElementById('descuentoDisplay').textContent = formatter.format(descuentoMonto);
+            document.getElementById('recargoDisplay').textContent = formatter.format(recargoMonto);
+            document.getElementById('totalDisplay').textContent = formatter.format(total);
+            
+            // Validar si hay al menos un ítem válido
+            const hasValidItems = items.some(item => item.cantidad > 0 && item.precioUnitario > 0);
+            const itemsError = document.getElementById('itemsError');
+            
+            if (!hasValidItems && items.length > 0) {
+                itemsError.classList.remove('hidden');
+            } else {
+                itemsError.classList.add('hidden');
+            }
+            
+            return { subtotal, descuentoMonto, recargoMonto, total, hasValidItems };
+        }
+        
+        // Función para cargar el último destinatario desde localStorage
+        function loadLastDestinatario() {
+            const lastDestinatario = localStorage.getItem('lastDestinatario');
+            if (lastDestinatario) {
+                try {
+                    const data = JSON.parse(lastDestinatario);
+                    document.getElementById('destinatarioNombre').value = data.nombre || '';
+                    document.getElementById('destinatarioCINIT').value = data.cinit || '';
+                    document.getElementById('destinatarioTelefono').value = data.telefono || '';
+                } catch (e) {
+                    console.error('Error al cargar datos del destinatario:', e);
+                }
+            }
+        }
+        
+        // Función para guardar datos del destinatario en localStorage
+        function saveDestinatarioToLocalStorage() {
+            const destinatarioData = {
+                nombre: document.getElementById('destinatarioNombre').value,
+                cinit: document.getElementById('destinatarioCINIT').value,
+                telefono: document.getElementById('destinatarioTelefono').value
+            };
+            
+            localStorage.setItem('lastDestinatario', JSON.stringify(destinatarioData));
+        }
+        
+        // Función para validar el formulario
+        function validateForm() {
+            let isValid = true;
+            
+            // Validar destinatario
+            const destinatarioNombre = document.getElementById('destinatarioNombre').value.trim();
+            const errorDestinatarioNombre = document.getElementById('errorDestinatarioNombre');
+            
+            if (!destinatarioNombre) {
+                errorDestinatarioNombre.classList.add('show');
+                isValid = false;
+            } else {
+                errorDestinatarioNombre.classList.remove('show');
+            }
+            
+            // Validar ítems
+            const { hasValidItems } = calculateTotals();
+            const itemsError = document.getElementById('itemsError');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            if (!hasValidItems) {
+                itemsError.classList.remove('hidden');
+                errorMessage.textContent = "Agregue al menos un ítem válido (cantidad y precio).";
+                errorMessage.classList.remove('hidden');
+                isValid = false;
+            } else {
+                itemsError.classList.add('hidden');
+            }
+            
+            return isValid;
+        }
+        
+        // Función para generar la proforma
+        function generateProforma() {
+            // Validar formulario
+            if (!validateForm()) {
+                document.getElementById('errorMessage').classList.remove('hidden');
+                document.getElementById('successMessage').classList.add('hidden');
+                return;
+            }
+            
+            // Incrementar y guardar número de proforma
+            proformaNumber++;
+            localStorage.setItem('proformaNumber', proformaNumber);
+            
+            // Guardar datos del destinatario
+            saveDestinatarioToLocalStorage();
+            
+            // Obtener valores de los campos
+            const emisorNIT = document.getElementById('emisorNIT').value.trim();
+            const destinatarioNombre = document.getElementById('destinatarioNombre').value.trim();
+            const destinatarioCINIT = document.getElementById('destinatarioCINIT').value.trim();
+            const destinatarioTelefono = document.getElementById('destinatarioTelefono').value.trim();
+            const plazoEntrega = document.getElementById('plazoEntrega').value;
+            const garantia = document.getElementById('garantia').value;
+            const validezOferta = document.getElementById('validezOferta').value;
+            const lugarEntrega = document.getElementById('lugarEntrega').value;
+            const metodoPago = document.getElementById('metodoPago').value;
+            const observaciones = document.getElementById('observaciones').value.trim();
+            
+            // Calcular totales
+            const { subtotal, descuentoMonto, recargoMonto, total } = calculateTotals();
+            
+            // Obtener fecha actual formateada
+            const fechaActual = dateFormatter.format(new Date());
+            
+            // Generar HTML de la proforma
+            const proformaHTML = `
+                <div class="proforma-header fade-in">
+                    <div class="proforma-title">PROFORMA</div>
+                    <div class="proforma-number">N° PROFORMA: ${proformaNumber}</div>
+                    <div class="proforma-number">Fecha: ${fechaActual}</div>
+                </div>
+                
+                <div class="proforma-emisor">
+                    <h3>DATOS DEL EMISOR</h3>
+                    <p><strong>Nombre:</strong> FRANZ RAFAEL MANGUIA IÑIGUEZ</p>
+                    <p><strong>CI:</strong> 5045135</p>
+                    <p><strong>Celular:</strong> 72971268</p>
+                    <p><strong>Barrio:</strong> Barrio San Gerónimo</p>
+                    ${emisorNIT ? `<p><strong>NIT Empresa:</strong> ${emisorNIT}</p>` : ''}
+                </div>
+                
+                <div class="proforma-destinatario">
+                    <h3>DATOS DEL DESTINATARIO</h3>
+                    <p><strong>Nombre/Razón Social:</strong> ${destinatarioNombre}</p>
+                    ${destinatarioCINIT ? `<p><strong>CI/NIT:</strong> ${destinatarioCINIT}</p>` : ''}
+                    ${destinatarioTelefono ? `<p><strong>Teléfono:</strong> ${destinatarioTelefono}</p>` : ''}
+                </div>
+                
+                <div class="proforma-table">
+                    <table class="proforma-table">
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Unidad</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario (Bs)</th>
+                                <th>Subtotal (Bs)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${items.filter(item => item.cantidad > 0 && item.precioUnitario > 0).map(item => `
+                                <tr>
+                                    <td>${item.descripcion || 'Producto/Servicio metalúrgico'}</td>
+                                    <td>${item.unidad}</td>
+                                    <td>${item.cantidad}</td>
+                                    <td>${formatter.format(item.precioUnitario)}</td>
+                                    <td>${formatter.format(item.subtotal)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="proforma-totales">
+                    <table>
+                        <tr>
+                            <td>Subtotal:</td>
+                            <td>${formatter.format(subtotal)}</td>
+                        </tr>
+                        ${descuentoMonto > 0 ? `<tr><td>Descuento (${document.getElementById('descuento').value}%):</td><td>${formatter.format(descuentoMonto)}</td></tr>` : ''}
+                        ${recargoMonto > 0 ? `<tr><td>Recargo (${document.getElementById('recargo').value}%):</td><td>${formatter.format(recargoMonto)}</td></tr>` : ''}
+                        <tr>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>${formatter.format(total)}</strong></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="proforma-observaciones">
+                    <h3>CONDICIONES Y OBSERVACIONES</h3>
+                    <p><strong>Plazo de entrega:</strong> ${plazoEntrega} días</p>
+                    <p><strong>Garantía:</strong> ${garantia} meses</p>
+                    <p><strong>Validez de la oferta:</strong> ${validezOferta} días</p>
+                    <p><strong>Método de pago:</strong> ${metodoPago}</p>
+                    <p><strong>Lugar de entrega:</strong> ${lugarEntrega}</p>
+                    ${observaciones ? `<p><strong>Observaciones:</strong> ${observaciones}</p>` : ''}
+                </div>
+                
+                <div class="proforma-footer">
+                    <p>yacuiba-bolivia</p>
+                    <p>Proforma generada el ${fechaActual} - N° ${proformaNumber}</p>
+                </div>
+            `;
+            
+            // Mostrar la proforma en el contenedor de previsualización
+            document.getElementById('proformaPreview').innerHTML = proformaHTML;
+            
+            // Habilitar botones de descarga
+            document.getElementById('downloadPdfBtn').disabled = false;
+            document.getElementById('downloadWordBtn').disabled = false;
+            
+            // Mostrar mensaje de éxito
+            document.getElementById('successMessage').classList.remove('hidden');
+            document.getElementById('errorMessage').classList.add('hidden');
+            
+            // Marcar como generada
+            proformaGenerated = true;
+            
+            // Animación de fade-in
+            const previewContainer = document.getElementById('proformaPreview');
+            previewContainer.classList.add('fade-in');
+        }
+        
+        // Función para descargar PDF
+        function downloadPDF() {
+            if (!proformaGenerated) {
+                alert("Por favor, genere primero la proforma.");
+                return;
+            }
+            
+            // Mostrar spinner en el botón
+            const pdfBtn = document.getElementById('downloadPdfBtn');
+            const originalText = pdfBtn.innerHTML;
+            pdfBtn.innerHTML = '<span class="spinner"></span> Generando PDF...';
+            pdfBtn.disabled = true;
+            
+            // Usamos html2canvas y jsPDF (incluidos por CDN)
+            // Primero verificar que las librerías estén cargadas
+            if (typeof html2canvas === 'undefined' || typeof jsPDF === 'undefined') {
+                alert("Error: Las librerías necesarias para generar PDF no están disponibles. Verifique su conexión.");
+                pdfBtn.innerHTML = originalText;
+                pdfBtn.disabled = false;
+                return;
+            }
+            
+            // Capturar la proforma como imagen
+            const element = document.getElementById('proformaPreview');
+            
+            html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff'
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgWidth = 210; // Ancho A4 en mm
+                const pageHeight = 297; // Alto A4 en mm
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                // Agregar páginas adicionales si es necesario
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                // Guardar el PDF
+                pdf.save(`proforma-${proformaNumber}.pdf`);
+                
+                // Restaurar botón
+                pdfBtn.innerHTML = originalText;
+                pdfBtn.disabled = false;
+            }).catch(error => {
+                console.error('Error al generar PDF:', error);
+                alert("Error al generar el PDF. Intente nuevamente.");
+                
+                // Restaurar botón
+                pdfBtn.innerHTML = originalText;
+                pdfBtn.disabled = false;
+            });
+        }
+        
+        // Función para descargar Word
+        function downloadWord() {
+            if (!proformaGenerated) {
+                alert("Por favor, genere primero la proforma.");
+                return;
+            }
+            
+            // Mostrar spinner en el botón
+            const wordBtn = document.getElementById('downloadWordBtn');
+            const originalText = wordBtn.innerHTML;
+            wordBtn.innerHTML = '<span class="spinner"></span> Generando Word...';
+            wordBtn.disabled = true;
+            
+            // Crear contenido del documento Word
+            const proformaContent = document.getElementById('proformaPreview').innerText;
+            
+            // Crear un Blob con el contenido
+            const blob = new Blob([`
+                PROFORMA N° ${proformaNumber}
+                
+                DATOS DEL EMISOR:
+                Nombre: FRANZ RAFAEL MANGUIA IÑIGUEZ
+                CI: 5045135
+                Celular: 72971268
+                Barrio: Barrio San Gerónimo
+                ${document.getElementById('emisorNIT').value.trim() ? `NIT Empresa: ${document.getElementById('emisorNIT').value.trim()}` : ''}
+                
+                DATOS DEL DESTINATARIO:
+                Nombre/Razón Social: ${document.getElementById('destinatarioNombre').value.trim()}
+                ${document.getElementById('destinatarioCINIT').value.trim() ? `CI/NIT: ${document.getElementById('destinatarioCINIT').value.trim()}` : ''}
+                ${document.getElementById('destinatarioTelefono').value.trim() ? `Teléfono: ${document.getElementById('destinatarioTelefono').value.trim()}` : ''}
+                
+                ÍTEMS:
+                ${items.filter(item => item.cantidad > 0 && item.precioUnitario > 0).map((item, index) => `
+                ${index + 1}. ${item.descripcion || 'Producto/Servicio metalúrgico'}
+                    Unidad: ${item.unidad}
+                    Cantidad: ${item.cantidad}
+                    Precio Unitario: ${formatter.format(item.precioUnitario)}
+                    Subtotal: ${formatter.format(item.subtotal)}
+                `).join('')}
+                
+                TOTALES:
+                Subtotal: ${document.getElementById('subtotalDisplay').textContent}
+                Descuento: ${document.getElementById('descuentoDisplay').textContent}
+                Recargo: ${document.getElementById('recargoDisplay').textContent}
+                Total: ${document.getElementById('totalDisplay').textContent}
+                
+                CONDICIONES Y OBSERVACIONES:
+                Plazo de entrega: ${document.getElementById('plazoEntrega').value} días
+                Garantía: ${document.getElementById('garantia').value} meses
+                Validez de la oferta: ${document.getElementById('validezOferta').value} días
+                Método de pago: ${document.getElementById('metodoPago').value}
+                Lugar de entrega: ${document.getElementById('lugarEntrega').value}
+                ${document.getElementById('observaciones').value.trim() ? `Observaciones: ${document.getElementById('observaciones').value.trim()}` : ''}
+                
+                Fecha: ${dateFormatter.format(new Date())}
+                Lugar: yacuiba-bolivia
+            `], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+            
+            // Crear un enlace para descargar
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `proforma-${proformaNumber}.doc`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            // Restaurar botón
+            setTimeout(() => {
+                wordBtn.innerHTML = originalText;
+                wordBtn.disabled = false;
+            }, 500);
+        }
+        
+        // Función para imprimir la proforma
+        function printProforma() {
+            if (!proformaGenerated) {
+                alert("Por favor, genere primero la proforma.");
+                return;
+            }
+            
+            window.print();
+        }
+    </script>
+</body>
+</html>

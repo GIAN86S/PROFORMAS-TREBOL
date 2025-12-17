@@ -1069,52 +1069,63 @@
         }
         
         // Función para descargar PDF
-        function downloadPDF() {
+        async function downloadPDF() {
             if (!proformaGenerated) {
                 alert("Por favor, genere primero la proforma.");
                 return;
             }
-            
+
             // Mostrar spinner en el botón
             const pdfBtn = document.getElementById('downloadPdfBtn');
             const originalText = pdfBtn.innerHTML;
             pdfBtn.innerHTML = '<span class="spinner"></span> Generando PDF...';
             pdfBtn.disabled = true;
-            
-            // Usamos html2canvas y jsPDF (incluidos por CDN)
-            // La librería html2pdf ya incluye html2canvas y jsPDF
+
             if (typeof html2pdf === 'undefined') {
                 alert("Error: Las librerías necesarias para generar PDF no están disponibles. Verifique su conexión.");
                 pdfBtn.innerHTML = originalText;
                 pdfBtn.disabled = false;
                 return;
             }
-            
-            // Elemento a convertir
-            const element = document.querySelector('.proforma-preview-container');
-            
-            // Opciones para html2pdf
-            const opt = {
-                margin:       10, // en mm
-                filename:     `proforma-${proformaNumber}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
 
-            // Generar el PDF usando la librería, que maneja el paginado automáticamente
-            html2pdf().from(element).set(opt).save().then(() => {
-                // Restaurar botón
-                pdfBtn.innerHTML = originalText;
-                pdfBtn.disabled = false;
-            }).catch(error => {
+            try {
+                // 1. Clonar el contenido de la proforma para no afectar la vista actual.
+                const proformaContent = document.getElementById('proformaPreview').cloneNode(true);
+
+                // 2. Crear un contenedor temporal con estilos explícitos para la captura.
+                const printContainer = document.createElement('div');
+                printContainer.style.position = 'absolute';
+                printContainer.style.left = '-9999px'; // Moverlo fuera de la pantalla
+                printContainer.style.width = '210mm'; // Ancho A4
+                printContainer.style.padding = '20mm 15mm'; // Padding para márgenes
+                printContainer.style.backgroundColor = 'white';
+                printContainer.style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+                printContainer.appendChild(proformaContent);
+                document.body.appendChild(printContainer);
+
+                // 3. Opciones para html2pdf
+                const opt = {
+                    margin: 0, // Los márgenes ya están aplicados con el padding
+                    filename: `proforma-${proformaNumber}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 3, useCORS: true, letterRendering: true }, // Aumentar escala para máxima calidad
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                // 4. Generar el PDF desde el contenedor preparado
+                await html2pdf().from(printContainer).set(opt).save();
+
+                // 5. Limpieza: eliminar el contenedor temporal
+                document.body.removeChild(printContainer);
+
+            } catch (error) {
                 console.error('Error al generar PDF:', error);
                 alert("Error al generar el PDF. Intente nuevamente.");
-                
-                // Restaurar botón en caso de error
+            } finally {
+                // 6. Restaurar el botón, tanto si tuvo éxito como si falló.
                 pdfBtn.innerHTML = originalText;
                 pdfBtn.disabled = false;
-            });
+            }
         }
         
         // Función para descargar Word como un archivo .docx compatible

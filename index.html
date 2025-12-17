@@ -72,15 +72,19 @@
         
         .logo {
             display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--primary-color);
-            color: white;
-            width: 60px;
-            height: 60px;
+            width: 80px; /* Aumentamos el tamaño para que se vea mejor */
+            height: 80px;
             border-radius: 50%;
-            font-size: 1.8rem;
             margin-bottom: 1rem;
+            overflow: hidden; /* Oculta las partes de la imagen que se salen del círculo */
+            background-color: var(--light-gray); /* Color de fondo mientras carga la imagen */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Asegura que la imagen cubra todo el círculo sin deformarse */
         }
         
         .container {
@@ -465,7 +469,9 @@
 <body>
     <div class="no-print">
         <header>
-            <div class="logo">🛠️</div>
+            <div class="logo">
+                <img src="logo.png" alt="Logo de la Empresa">
+            </div>
             <h1>Sistema de Proformas Metalúrgicas</h1>
             <p>Genera proformas profesionales para productos y servicios de metalurgia en Bolivia</p>
         </header>
@@ -1105,14 +1111,13 @@
                 console.error('Error al generar PDF:', error);
                 alert("Error al generar el PDF. Intente nuevamente.");
                 
-                // Guardar el PDF
-                // Restaurar botón
+                // Restaurar botón en caso de error
                 pdfBtn.innerHTML = originalText;
                 pdfBtn.disabled = false;
             });
         }
         
-        // Función para descargar Word
+        // Función para descargar Word como un archivo .docx compatible
         function downloadWord() {
             if (!proformaGenerated) {
                 alert("Por favor, genere primero la proforma.");
@@ -1151,13 +1156,13 @@
             const sourceHTML = `${header}<style>${styles}</style>${proformaHTML}${footer}`;
             
             // Crear un Blob con el contenido HTML
-            const blob = new Blob([sourceHTML], { type: 'application/msword' });
+            const blob = new Blob([sourceHTML], { type: 'text/html' });
             
             // Crear un enlace para descargar
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `proforma-${proformaNumber}.doc`;
+            a.download = `proforma-${proformaNumber}.docx`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

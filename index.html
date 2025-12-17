@@ -828,10 +828,7 @@
             item.subtotal = item.cantidad * item.precioUnitario;
             
             // Actualizar la celda de subtotal
-            const row = document.querySelector(`tr[data-id="${itemId}"]`);
-            if (row) {
-                row.querySelector('.subtotal-cell').textContent = formatter.format(item.subtotal);
-            }
+            renderItemSubtotal(itemId, item.subtotal);
             
             // Recalcular totales
             calculateTotals();
@@ -839,6 +836,12 @@
         
         // Función para calcular totales
         function calculateTotals() {
+            // Validar si hay al menos un ítem válido
+            const hasValidItems = items.some(item => item.cantidad > 0 && item.precioUnitario > 0);
+            const itemsError = document.getElementById('itemsError');
+            
+            itemsError.classList.toggle('hidden', hasValidItems || items.length === 0);
+
             // Calcular subtotal sumando todos los ítems
             const subtotal = items.reduce((sum, item) => sum + item.subtotal, 0);
             
@@ -859,19 +862,15 @@
             document.getElementById('recargoDisplay').textContent = formatter.format(recargoMonto);
             document.getElementById('totalDisplay').textContent = formatter.format(total);
             
-            // Validar si hay al menos un ítem válido
-            const hasValidItems = items.some(item => item.cantidad > 0 && item.precioUnitario > 0);
-            const itemsError = document.getElementById('itemsError');
-            
-            if (!hasValidItems && items.length > 0) {
-                itemsError.classList.remove('hidden');
-            } else {
-                itemsError.classList.add('hidden');
-            }
-            
             return { subtotal, descuentoMonto, recargoMonto, total, hasValidItems };
         }
         
+        // Función auxiliar para actualizar solo el subtotal de un ítem en el DOM
+        function renderItemSubtotal(itemId, subtotal) {
+            const row = document.querySelector(`tr[data-id="${itemId}"]`);
+            if (row) row.querySelector('.subtotal-cell').textContent = formatter.format(subtotal);
+        }
+
         // Función para cargar el último destinatario desde localStorage
         function loadLastDestinatario() {
             const lastDestinatario = localStorage.getItem('lastDestinatario');
@@ -1077,46 +1076,28 @@
             pdfBtn.disabled = true;
             
             // Usamos html2canvas y jsPDF (incluidos por CDN)
-            // Primero verificar que las librerías estén cargadas
-            if (typeof html2canvas === 'undefined' || typeof jsPDF === 'undefined') {
+            // La librería html2pdf ya incluye html2canvas y jsPDF
+            if (typeof html2pdf === 'undefined') {
                 alert("Error: Las librerías necesarias para generar PDF no están disponibles. Verifique su conexión.");
                 pdfBtn.innerHTML = originalText;
                 pdfBtn.disabled = false;
                 return;
             }
             
-            // Capturar la proforma como imagen
+            // Elemento a convertir
             const element = document.getElementById('proformaPreview');
             
-            html2canvas(element, {
-                scale: 2,
-                useCORS: true,
-                logging: false,
-                backgroundColor: '#ffffff'
-            }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const imgWidth = 210; // Ancho A4 en mm
-                const pageHeight = 297; // Alto A4 en mm
-                const imgHeight = canvas.height * imgWidth / canvas.width;
-                
-                let heightLeft = imgHeight;
-                let position = 0;
-                
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-                
-                // Agregar páginas adicionales si es necesario
-                while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-                }
-                
-                // Guardar el PDF
-                pdf.save(`proforma-${proformaNumber}.pdf`);
-                
+            // Opciones para html2pdf
+            const opt = {
+                margin:       10, // en mm
+                filename:     `proforma-${proformaNumber}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Generar el PDF usando la librería, que maneja el paginado automáticamente
+            html2pdf().from(element).set(opt).save().then(() => {
                 // Restaurar botón
                 pdfBtn.innerHTML = originalText;
                 pdfBtn.disabled = false;
@@ -1124,6 +1105,7 @@
                 console.error('Error al generar PDF:', error);
                 alert("Error al generar el PDF. Intente nuevamente.");
                 
+                // Guardar el PDF
                 // Restaurar botón
                 pdfBtn.innerHTML = originalText;
                 pdfBtn.disabled = false;
@@ -1143,51 +1125,33 @@
             wordBtn.innerHTML = '<span class="spinner"></span> Generando Word...';
             wordBtn.disabled = true;
             
-            // Crear contenido del documento Word
-            const proformaContent = document.getElementById('proformaPreview').innerText;
+            // Crear contenido HTML para el documento Word, incluyendo estilos
+            const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
+                "xmlns:w='urn:schemas-microsoft-com:office:word' "+
+                "xmlns='http://www.w3.org/TR/REC-html40'>"+
+                "<head><meta charset='utf-8'><title>Proforma</title></head><body>";
+            const footer = "</body></html>";
             
-            // Crear un Blob con el contenido
-            const blob = new Blob([`
-                PROFORMA N° ${proformaNumber}
-                
-                DATOS DEL EMISOR:
-                Nombre: FRANZ RAFAEL MANGUIA IÑIGUEZ
-                CI: 5045135
-                Celular: 72971268
-                Barrio: Barrio San Gerónimo
-                ${document.getElementById('emisorNIT').value.trim() ? `NIT Empresa: ${document.getElementById('emisorNIT').value.trim()}` : ''}
-                
-                DATOS DEL DESTINATARIO:
-                Nombre/Razón Social: ${document.getElementById('destinatarioNombre').value.trim()}
-                ${document.getElementById('destinatarioCINIT').value.trim() ? `CI/NIT: ${document.getElementById('destinatarioCINIT').value.trim()}` : ''}
-                ${document.getElementById('destinatarioTelefono').value.trim() ? `Teléfono: ${document.getElementById('destinatarioTelefono').value.trim()}` : ''}
-                
-                ÍTEMS:
-                ${items.filter(item => item.cantidad > 0 && item.precioUnitario > 0).map((item, index) => `
-                ${index + 1}. ${item.descripcion || 'Producto/Servicio metalúrgico'}
-                    Unidad: ${item.unidad}
-                    Cantidad: ${item.cantidad}
-                    Precio Unitario: ${formatter.format(item.precioUnitario)}
-                    Subtotal: ${formatter.format(item.subtotal)}
-                `).join('')}
-                
-                TOTALES:
-                Subtotal: ${document.getElementById('subtotalDisplay').textContent}
-                Descuento: ${document.getElementById('descuentoDisplay').textContent}
-                Recargo: ${document.getElementById('recargoDisplay').textContent}
-                Total: ${document.getElementById('totalDisplay').textContent}
-                
-                CONDICIONES Y OBSERVACIONES:
-                Plazo de entrega: ${document.getElementById('plazoEntrega').value} días
-                Garantía: ${document.getElementById('garantia').value} meses
-                Validez de la oferta: ${document.getElementById('validezOferta').value} días
-                Método de pago: ${document.getElementById('metodoPago').value}
-                Lugar de entrega: ${document.getElementById('lugarEntrega').value}
-                ${document.getElementById('observaciones').value.trim() ? `Observaciones: ${document.getElementById('observaciones').value.trim()}` : ''}
-                
-                Fecha: ${dateFormatter.format(new Date())}
-                Lugar: yacuiba-bolivia
-            `], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+            // Obtener el HTML de la previsualización
+            const proformaHTML = document.getElementById('proformaPreview').innerHTML;
+
+            // Extraer todos los estilos CSS de la página
+            const styles = Array.from(document.styleSheets)
+                .map(styleSheet => {
+                    try {
+                        return Array.from(styleSheet.cssRules)
+                            .map(rule => rule.cssText)
+                            .join('');
+                    } catch (e) {
+                        // Ignorar errores de hojas de estilo de origen cruzado
+                        return '';
+                    }
+                }).join('');
+
+            const sourceHTML = `${header}<style>${styles}</style>${proformaHTML}${footer}`;
+            
+            // Crear un Blob con el contenido HTML
+            const blob = new Blob([sourceHTML], { type: 'application/msword' });
             
             // Crear un enlace para descargar
             const url = URL.createObjectURL(blob);
@@ -1215,6 +1179,8 @@
             
             window.print();
         }
-    </script>
+    </script>    
+    <!-- Librerías para generar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </body>
 </html>

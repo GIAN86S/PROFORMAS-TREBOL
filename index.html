@@ -6,7 +6,6 @@
     <title>Proforma Metalúrgica - Bolivia</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
     <style>
-        /* RESET Y ESTILOS BASE */
         * {
             margin: 0;
             padding: 0;
@@ -14,18 +13,16 @@
         }
         
         :root {
-            --primary-color: #556B2F; /* Verde olivo */
+            --primary-color: #556B2F;
             --secondary-color: #333333;
             --light-gray: #f5f5f5;
             --medium-gray: #e0e0e0;
             --dark-gray: #666666;
             --success-color: #4CAF50;
-            --warning-color: #FF9800;
             --error-color: #f44336;
             --text-color: #222222;
             --border-radius: 8px;
             --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
         }
         
         body {
@@ -33,12 +30,11 @@
             line-height: 1.6;
             color: var(--text-color);
             background-color: #f9f9f9;
-            padding: 20px;
+            padding: 10px;
             max-width: 1200px;
             margin: 0 auto;
         }
         
-        /* TIPOGRAFÍA */
         h1, h2, h3 {
             color: var(--secondary-color);
             margin-bottom: 1rem;
@@ -46,7 +42,7 @@
         }
         
         h1 {
-            font-size: 2.2rem;
+            font-size: clamp(1.5rem, 5vw, 2.2rem);
             color: var(--primary-color);
             text-align: center;
             padding-bottom: 0.5rem;
@@ -55,16 +51,15 @@
         }
         
         h2 {
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
             margin-top: 1.5rem;
         }
         
         h3 {
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 3vw, 1.2rem);
             margin-top: 1rem;
         }
         
-        /* ESTRUCTURA PRINCIPAL */
         header {
             text-align: center;
             margin-bottom: 2rem;
@@ -72,25 +67,31 @@
         
         .logo {
             display: inline-flex;
-            width: 80px; /* Aumentamos el tamaño para que se vea mejor */
+            width: 80px;
             height: 80px;
             border-radius: 50%;
             margin-bottom: 1rem;
-            overflow: hidden; /* Oculta las partes de la imagen que se salen del círculo */
-            background-color: var(--light-gray); /* Color de fondo mientras carga la imagen */
+            overflow: hidden;
+            background-color: var(--light-gray);
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .logo img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Asegura que la imagen cubra todo el círculo sin deformarse */
+            object-fit: cover;
         }
         
         .container {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 2rem;
+            gap: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                gap: 2rem;
+            }
         }
         
         @media (min-width: 992px) {
@@ -103,23 +104,23 @@
             }
         }
         
-        /* TARJETAS Y PANELES */
         .panel {
             background-color: white;
             border-radius: var(--border-radius);
-            padding: 1.5rem;
+            padding: 1rem;
             box-shadow: var(--box-shadow);
-            margin-bottom: 1.5rem;
-            transition: var(--transition);
+            margin-bottom: 1rem;
         }
         
-        .panel:hover {
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        @media (min-width: 768px) {
+            .panel {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
         }
         
-        /* FORMULARIOS */
         .form-group {
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
         }
         
         label {
@@ -127,6 +128,7 @@
             margin-bottom: 0.5rem;
             font-weight: 500;
             color: var(--secondary-color);
+            font-size: clamp(0.875rem, 2vw, 1rem);
         }
         
         .required::after {
@@ -136,12 +138,17 @@
         
         input, select, textarea {
             width: 100%;
-            padding: 0.8rem;
+            padding: 0.6rem;
             border: 1px solid var(--medium-gray);
             border-radius: var(--border-radius);
             font-family: inherit;
-            font-size: 1rem;
-            transition: var(--transition);
+            font-size: clamp(0.875rem, 2vw, 1rem);
+        }
+        
+        @media (min-width: 768px) {
+            input, select, textarea {
+                padding: 0.8rem;
+            }
         }
         
         input:focus, select:focus, textarea:focus {
@@ -163,25 +170,30 @@
             }
         }
         
-        /* TABLA DE ÍTEMS */
         .table-container {
             overflow-x: auto;
             margin-bottom: 1.5rem;
+            -webkit-overflow-scrolling: touch;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
-            max-width: 100%;
-            table-layout: fixed;
+            min-width: 600px;
         }
         
         th, td {
-            padding: 0.8rem;
+            padding: 0.5rem;
             text-align: left;
             border-bottom: 1px solid var(--medium-gray);
             word-wrap: break-word;
-            overflow-wrap: break-word;
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+        }
+        
+        @media (min-width: 768px) {
+            th, td {
+                padding: 0.8rem;
+            }
         }
         
         th {
@@ -199,21 +211,27 @@
             gap: 0.5rem;
         }
         
-        /* BOTONES */
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            padding: 0.8rem 1.5rem;
+            padding: 0.6rem 1rem;
             border: none;
             border-radius: var(--border-radius);
             font-family: inherit;
-            font-size: 1rem;
+            font-size: clamp(0.875rem, 2vw, 1rem);
             font-weight: 500;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.3s ease;
             text-decoration: none;
+            white-space: nowrap;
+        }
+        
+        @media (min-width: 768px) {
+            .btn {
+                padding: 0.8rem 1.5rem;
+            }
         }
         
         .btn-primary {
@@ -221,7 +239,7 @@
             color: white;
         }
         
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             background-color: #445522;
             transform: translateY(-2px);
         }
@@ -231,7 +249,7 @@
             color: white;
         }
         
-        .btn-secondary:hover {
+        .btn-secondary:hover:not(:disabled) {
             background-color: #555555;
             transform: translateY(-2px);
         }
@@ -241,7 +259,7 @@
             color: white;
         }
         
-        .btn-success:hover {
+        .btn-success:hover:not(:disabled) {
             background-color: #3d8b40;
             transform: translateY(-2px);
         }
@@ -255,6 +273,11 @@
             background-color: #d32f2f;
         }
         
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
         .btn-icon {
             width: 36px;
             height: 36px;
@@ -265,101 +288,197 @@
         .btn-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 1.5rem;
+            gap: 0.5rem;
+            margin-top: 1rem;
         }
         
-        /* PREVISUALIZACIÓN DE PROFORMA */
+        @media (min-width: 768px) {
+            .btn-group {
+                gap: 1rem;
+                margin-top: 1.5rem;
+            }
+        }
+        
         .proforma-preview-container {
             background-color: white;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             margin-top: 1rem;
             border: 1px solid var(--medium-gray);
-            min-height: 500px;
+            min-height: 300px;
+            padding: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .proforma-preview-container {
+                padding: 2rem;
+                min-height: 500px;
+            }
         }
         
         .proforma-header {
             text-align: center;
-            border-bottom: 3px solid var(--primary-color);
-            padding-bottom: 1.5rem;
-            margin-bottom: 2rem;
+            border-bottom: 3px solid #556B2F;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .proforma-header {
+                padding-bottom: 1.5rem;
+                margin-bottom: 2rem;
+            }
         }
         
         .proforma-title {
-            font-size: 2.5rem;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
             font-weight: 700;
-            color: var(--primary-color);
+            color: #556B2F;
             letter-spacing: 2px;
             margin-bottom: 0.5rem;
         }
         
         .proforma-number {
-            font-size: 1.2rem;
-            color: var(--dark-gray);
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            color: #666666;
             font-weight: 500;
         }
         
-        .proforma-emisor, .proforma-destinatario {
-            margin-bottom: 2rem;
+        .proforma-logo {
+            text-align: center;
+            margin-bottom: 1rem;
         }
         
-        .proforma-emisor h3, .proforma-destinatario h3 {
-            background-color: var(--light-gray);
+        .proforma-logo img {
+            max-height: 60px;
+            width: auto;
+        }
+        
+        @media (min-width: 768px) {
+            .proforma-logo img {
+                max-height: 80px;
+            }
+        }
+        
+        .proforma-emisor, .proforma-destinatario, .proforma-observaciones {
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .proforma-emisor, .proforma-destinatario, .proforma-observaciones {
+                margin-bottom: 2rem;
+            }
+        }
+        
+        .proforma-emisor h3, .proforma-destinatario h3, .proforma-observaciones h3 {
+            background-color: #f5f5f5;
             padding: 0.5rem;
-            border-left: 4px solid var(--primary-color);
+            border-left: 4px solid #556B2F;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+        }
+        
+        .proforma-emisor p, .proforma-destinatario p, .proforma-observaciones p {
+            font-size: clamp(0.875rem, 2vw, 1rem);
+            margin: 0.3rem 0;
         }
         
         .proforma-table {
-            margin: 2rem 0;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+        
+        @media (min-width: 768px) {
+            .proforma-table {
+                margin: 2rem 0;
+            }
+        }
+        
+        .proforma-table table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 500px;
         }
         
         .proforma-table th {
-            background-color: var(--primary-color);
+            background-color: #556B2F;
             color: white;
+            padding: 0.6rem;
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+        }
+        
+        @media (min-width: 768px) {
+            .proforma-table th {
+                padding: 0.8rem;
+            }
+        }
+        
+        .proforma-table td {
+            padding: 0.6rem;
+            border: 1px solid #e0e0e0;
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+        }
+        
+        @media (min-width: 768px) {
+            .proforma-table td {
+                padding: 0.8rem;
+            }
         }
         
         .proforma-totales {
-            margin-top: 2rem;
+            margin-top: 1.5rem;
             text-align: right;
         }
         
+        @media (min-width: 768px) {
+            .proforma-totales {
+                margin-top: 2rem;
+            }
+        }
+        
         .proforma-totales table {
-            width: 300px;
+            width: 100%;
+            max-width: 300px;
             margin-left: auto;
             border: 1px solid var(--medium-gray);
         }
         
         .proforma-totales td {
-            padding: 0.8rem;
+            padding: 0.5rem;
+            font-size: clamp(0.875rem, 2vw, 1rem);
+        }
+        
+        @media (min-width: 768px) {
+            .proforma-totales td {
+                padding: 0.8rem;
+            }
         }
         
         .proforma-totales tr:last-child {
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 3vw, 1.2rem);
             background-color: rgba(85, 107, 47, 0.1);
         }
         
-        .proforma-observaciones {
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px dashed var(--medium-gray);
-        }
-        
         .proforma-footer {
-            margin-top: 3rem;
+            margin-top: 2rem;
             text-align: center;
             color: var(--dark-gray);
-            font-size: 0.9rem;
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
             padding-top: 1rem;
             border-top: 1px solid var(--medium-gray);
         }
         
-        /* MENSAJES Y VALIDACIONES */
+        @media (min-width: 768px) {
+            .proforma-footer {
+                margin-top: 3rem;
+            }
+        }
+        
         .alert {
             padding: 1rem;
             border-radius: var(--border-radius);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: clamp(0.875rem, 2vw, 1rem);
         }
         
         .alert-success {
@@ -385,22 +504,28 @@
             display: block;
         }
         
-        /* SPINNER */
         .spinner {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             border-top-color: white;
             animation: spin 1s ease-in-out infinite;
+        }
+        
+        @media (min-width: 768px) {
+            .spinner {
+                width: 20px;
+                height: 20px;
+                border: 3px solid rgba(255, 255, 255, 0.3);
+            }
         }
         
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         
-        /* ANIMACIONES */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -410,31 +535,10 @@
             animation: fadeIn 0.5s ease-out;
         }
         
-        /* CONTROL DE PAGINACIÓN PARA PDF */
-        .proforma-table,
-        .proforma-totales,
-        .proforma-observaciones {
-            page-break-inside: avoid;
-        }
-        
-        .proforma-table tr {
-            page-break-inside: avoid;
-        }
-        
-        /* SOLO WEB */
-        @media screen {
-            .proforma-preview-container {
-                padding: 2rem;
-                border-radius: 8px;
-                box-shadow: var(--box-shadow);
-            }
-        }
-
-        /* ESTILOS DE IMPRESIÓN */
         @media print {
             @page {
                 size: A4;
-                margin: 20mm;
+                margin: 15mm;
             }
 
             body {
@@ -455,13 +559,10 @@
                 position: absolute;
                 left: 0;
                 top: 0;
-                width: 170mm; /* 210mm - 20mm - 20mm */
-                max-width: 170mm;
-                margin: 0 auto;
+                width: 100%;
                 box-shadow: none;
                 border: none;
                 padding: 0;
-                overflow: visible;
             }
             
             .no-print {
@@ -469,49 +570,31 @@
             }
             
             .proforma-table th {
-                background-color: var(--primary-color) !important;
+                background-color: #556B2F !important;
                 color: white !important;
                 -webkit-print-color-adjust: exact;
-            }
-            
-            /* EL PANEL SE VUELVE "HOJA" */
-            .panel,
-            .proforma-header,
-            .proforma-emisor,
-            .proforma-destinatario,
-            .proforma-table,
-            .proforma-totales,
-            .proforma-observaciones,
-            .proforma-footer {
-                width: 100%;
-                max-width: 100%;
-                padding: 0;
-                margin: 0;
-                box-shadow: none;
-                border-radius: 0;
-                page-break-inside: avoid;
+                print-color-adjust: exact;
             }
         }
         
-        /* FOOTER */
         footer {
             text-align: center;
-            margin-top: 3rem;
-            padding-top: 1.5rem;
+            margin-top: 2rem;
+            padding-top: 1rem;
             border-top: 1px solid var(--medium-gray);
             color: var(--dark-gray);
-            font-size: 0.9rem;
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
         }
         
-        /* UTILIDADES */
-        .text-right {
-            text-align: right;
+        @media (min-width: 768px) {
+            footer {
+                margin-top: 3rem;
+                padding-top: 1.5rem;
+            }
         }
         
-        .text-center {
-            text-align: center;
-        }
-        
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
         .mt-1 { margin-top: 1rem; }
         .mt-2 { margin-top: 2rem; }
         .mb-1 { margin-bottom: 1rem; }
@@ -523,7 +606,7 @@
     <div class="no-print">
         <header>
             <div class="logo">
-                <img src="logo.png" alt="Logo de la Empresa">
+                <img src="logo.png" alt="Logo">
             </div>
             <h1>Sistema de Proformas Metalúrgicas</h1>
             <p>Genera proformas profesionales para productos y servicios de metalurgia en Bolivia</p>
@@ -581,7 +664,7 @@
             
             <section class="panel proforma-preview-container">
                 <div id="proformaPreview">
-                    <!-- La previsualización de la proforma se generará aquí -->
+                    <p style="text-align: center; color: #999; padding: 2rem;">La proforma aparecerá aquí una vez generada</p>
                 </div>
             </section>
             
@@ -627,14 +710,13 @@
                             <tr>
                                 <th>Descripción</th>
                                 <th>Unidad</th>
-                                <th>Cantidad</th>
-                                <th>Precio Unitario (Bs)</th>
+                                <th>Cant.</th>
+                                <th>Precio Unit. (Bs)</th>
                                 <th>Subtotal (Bs)</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="itemsTableBody">
-                            <!-- Los ítems se agregarán dinámicamente aquí -->
                         </tbody>
                     </table>
                 </div>
@@ -702,15 +784,15 @@
                 
                 <div class="btn-group">
                     <button id="generateBtn" class="btn btn-primary">
-                        <span>📋</span> Generar Proforma
+                        <span>📋</span> Generar
                     </button>
                     
                     <button id="downloadPdfBtn" class="btn btn-success" disabled>
-                        <span>📄</span> Descargar PDF
+                        <span>📄</span> PDF
                     </button>
                     
                     <button id="downloadWordBtn" class="btn btn-secondary" disabled>
-                        <span>📝</span> Descargar Word
+                        <span>📝</span> Word
                     </button>
                     
                     <button id="printBtn" class="btn">
@@ -726,25 +808,21 @@
         </footer>
     </div>
 
-    <!-- Librerías (Cargadas ANTES del script principal para evitar errores) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://unpkg.com/html-docx-js/dist/html-docx.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
     <script>
-        // Variables globales
-        let proformaNumber = localStorage.getItem('proformaNumber') || 1000;
+        let proformaNumber = parseInt(localStorage.getItem('proformaNumber')) || 1000;
         let items = [];
         let proformaGenerated = false;
         
-        // Formateador de moneda para Bolivia
         const formatter = new Intl.NumberFormat("es-BO", {
             style: "currency",
             currency: "BOB",
             minimumFractionDigits: 2
         });
         
-        // Formateador de fecha para Bolivia
         const dateFormatter = new Intl.DateTimeFormat("es-BO", {
             timeZone: "America/La_Paz",
             year: "numeric",
@@ -752,35 +830,22 @@
             day: "numeric"
         });
         
-        // Inicialización de la aplicación
         document.addEventListener('DOMContentLoaded', function() {
-            // Establecer año actual en el footer
             document.getElementById('currentYear').textContent = new Date().getFullYear();
-            
-            // Cargar datos del destinatario desde localStorage si existen
             loadLastDestinatario();
             
-            // Agregar evento al botón de agregar ítem
             document.getElementById('addItemBtn').addEventListener('click', addNewItem);
-            
-            // Agregar eventos a los botones principales
             document.getElementById('generateBtn').addEventListener('click', generateProforma);
             document.getElementById('downloadPdfBtn').addEventListener('click', downloadPDF);
             document.getElementById('downloadWordBtn').addEventListener('click', downloadWord);
             document.getElementById('printBtn').addEventListener('click', printProforma);
-            
-            // Agregar eventos para recalcular totales
             document.getElementById('descuento').addEventListener('input', calculateTotals);
             document.getElementById('recargo').addEventListener('input', calculateTotals);
             
-            // Agregar un ítem inicial por defecto
             addNewItem();
-            
-            // Calcular totales iniciales
             calculateTotals();
         });
         
-        // Función para agregar un nuevo ítem a la tabla
         function addNewItem() {
             const itemId = Date.now() + Math.random();
             const newItem = {
@@ -795,21 +860,18 @@
             items.push(newItem);
             renderItemsTable();
             
-            // Enfocar el campo de descripción del nuevo ítem
             setTimeout(() => {
                 const input = document.querySelector(`[data-id="${itemId}"] input[name="descripcion"]`);
                 if (input) input.focus();
             }, 10);
         }
         
-        // Función para eliminar un ítem
         function deleteItem(itemId) {
             items = items.filter(item => item.id !== itemId);
             renderItemsTable();
             calculateTotals();
         }
         
-        // Función para renderizar la tabla de ítems
         function renderItemsTable() {
             const tableBody = document.getElementById('itemsTableBody');
             tableBody.innerHTML = '';
@@ -833,11 +895,11 @@
                     <td>
                         <select name="unidad">
                             <option value="unidad" ${item.unidad === 'unidad' ? 'selected' : ''}>Unidad</option>
-                            <option value="kg" ${item.unidad === 'kg' ? 'selected' : ''}>Kilogramo</option>
-                            <option value="ton" ${item.unidad === 'ton' ? 'selected' : ''}>Tonelada</option>
-                            <option value="m" ${item.unidad === 'm' ? 'selected' : ''}>Metro</option>
-                            <option value="m2" ${item.unidad === 'm2' ? 'selected' : ''}>Metro cuadrado</option>
-                            <option value="m3" ${item.unidad === 'm3' ? 'selected' : ''}>Metro cúbico</option>
+                            <option value="kg" ${item.unidad === 'kg' ? 'selected' : ''}>kg</option>
+                            <option value="ton" ${item.unidad === 'ton' ? 'selected' : ''}>Ton</option>
+                            <option value="m" ${item.unidad === 'm' ? 'selected' : ''}>m</option>
+                            <option value="m2" ${item.unidad === 'm2' ? 'selected' : ''}>m²</option>
+                            <option value="m3" ${item.unidad === 'm3' ? 'selected' : ''}>m³</option>
                             <option value="juego" ${item.unidad === 'juego' ? 'selected' : ''}>Juego</option>
                             <option value="par" ${item.unidad === 'par' ? 'selected' : ''}>Par</option>
                             <option value="hr" ${item.unidad === 'hr' ? 'selected' : ''}>Hora</option>
@@ -862,18 +924,15 @@
                 
                 tableBody.appendChild(row);
                 
-                // Agregar eventos a los inputs del ítem
                 const inputs = row.querySelectorAll('input, select');
                 inputs.forEach(input => {
                     input.addEventListener('input', () => updateItem(item.id, input.name, input.value));
                 });
                 
-                // Agregar evento al botón de eliminar
                 row.querySelector('.delete-item-btn').addEventListener('click', () => deleteItem(item.id));
             });
         }
         
-        // Función para actualizar un ítem
         function updateItem(itemId, field, value) {
             const item = items.find(item => item.id === itemId);
             if (!item) return;
@@ -888,39 +947,25 @@
                 item.precioUnitario = parseFloat(value) || 0;
             }
             
-            // Calcular subtotal
             item.subtotal = item.cantidad * item.precioUnitario;
-            
-            // Actualizar la celda de subtotal
             renderItemSubtotal(itemId, item.subtotal);
-            
-            // Recalcular totales
             calculateTotals();
         }
         
-        // Función para calcular totales
         function calculateTotals() {
-            // Validar si hay al menos un ítem válido
             const hasValidItems = items.some(item => item.cantidad > 0 && item.precioUnitario > 0);
             const itemsError = document.getElementById('itemsError');
             
             itemsError.classList.toggle('hidden', hasValidItems || items.length === 0);
 
-            // Calcular subtotal sumando todos los ítems
             const subtotal = items.reduce((sum, item) => sum + item.subtotal, 0);
-            
-            // Obtener descuento y recargo
             const descuentoPorcentaje = parseFloat(document.getElementById('descuento').value) || 0;
             const recargoPorcentaje = parseFloat(document.getElementById('recargo').value) || 0;
             
-            // Calcular montos de descuento y recargo
             const descuentoMonto = subtotal * (descuentoPorcentaje / 100);
             const recargoMonto = subtotal * (recargoPorcentaje / 100);
-            
-            // Calcular total
             const total = subtotal - descuentoMonto + recargoMonto;
             
-            // Actualizar displays
             document.getElementById('subtotalDisplay').textContent = formatter.format(subtotal);
             document.getElementById('descuentoDisplay').textContent = formatter.format(descuentoMonto);
             document.getElementById('recargoDisplay').textContent = formatter.format(recargoMonto);
@@ -929,13 +974,11 @@
             return { subtotal, descuentoMonto, recargoMonto, total, hasValidItems };
         }
         
-        // Función auxiliar para actualizar solo el subtotal de un ítem en el DOM
         function renderItemSubtotal(itemId, subtotal) {
             const row = document.querySelector(`tr[data-id="${itemId}"]`);
             if (row) row.querySelector('.subtotal-cell').textContent = formatter.format(subtotal);
         }
 
-        // Función para cargar el último destinatario desde localStorage
         function loadLastDestinatario() {
             const lastDestinatario = localStorage.getItem('lastDestinatario');
             if (lastDestinatario) {
@@ -950,7 +993,6 @@
             }
         }
         
-        // Función para guardar datos del destinatario en localStorage
         function saveDestinatarioToLocalStorage() {
             const destinatarioData = {
                 nombre: document.getElementById('destinatarioNombre').value,
@@ -961,11 +1003,9 @@
             localStorage.setItem('lastDestinatario', JSON.stringify(destinatarioData));
         }
         
-        // Función para validar el formulario
         function validateForm() {
             let isValid = true;
             
-            // Validar destinatario
             const destinatarioNombre = document.getElementById('destinatarioNombre').value.trim();
             const errorDestinatarioNombre = document.getElementById('errorDestinatarioNombre');
             
@@ -976,7 +1016,6 @@
                 errorDestinatarioNombre.classList.remove('show');
             }
             
-            // Validar ítems
             const { hasValidItems } = calculateTotals();
             const itemsError = document.getElementById('itemsError');
             const errorMessage = document.getElementById('errorMessage');
@@ -993,23 +1032,17 @@
             return isValid;
         }
         
-        // Función para generar la proforma
         function generateProforma() {
-            // Validar formulario
             if (!validateForm()) {
                 document.getElementById('errorMessage').classList.remove('hidden');
                 document.getElementById('successMessage').classList.add('hidden');
                 return;
             }
             
-            // Incrementar y guardar número de proforma
             proformaNumber++;
             localStorage.setItem('proformaNumber', proformaNumber);
-            
-            // Guardar datos del destinatario
             saveDestinatarioToLocalStorage();
             
-            // Obtener valores de los campos
             const emisorNIT = document.getElementById('emisorNIT').value.trim();
             const destinatarioNombre = document.getElementById('destinatarioNombre').value.trim();
             const destinatarioCINIT = document.getElementById('destinatarioCINIT').value.trim();
@@ -1021,36 +1054,14 @@
             const metodoPago = document.getElementById('metodoPago').value;
             const observaciones = document.getElementById('observaciones').value.trim();
             
-            // Calcular totales
             const { subtotal, descuentoMonto, recargoMonto, total } = calculateTotals();
-            
-            // Obtener fecha actual formateada
             const fechaActual = dateFormatter.format(new Date());
-            
-            // --- LÓGICA DE CAPTURA DE LOGO ---
-            // Capturamos el logo de la web y lo convertimos para que funcione en Word/PDF
-            let logoHtml = '';
-            const logoImg = document.querySelector('.logo img');
-            if (logoImg) {
-                let logoSrc = logoImg.src;
-                try {
-                    // Intentamos convertir a Base64 para máxima compatibilidad
-                    if (logoImg.complete && logoImg.naturalHeight !== 0) {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = logoImg.naturalWidth;
-                        canvas.height = logoImg.naturalHeight;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(logoImg, 0, 0);
-                        logoSrc = canvas.toDataURL('image/png');
-                    }
-                } catch (e) { console.warn('Usando imagen directa (sin Base64)'); }
-                logoHtml = `<div class="proforma-logo"><img src="${logoSrc}" style="height: 80px; width: auto;" alt="Logo"></div>`;
-            }
 
-            // Generar HTML de la proforma
             const proformaHTML = `
                 <div class="proforma-header fade-in">
-                    ${logoHtml}
+                    <div class="proforma-logo">
+                        <img src="logo.png" alt="Logo" style="height: 70px; width: auto;">
+                    </div>
                     <div class="proforma-title">PROFORMA</div>
                     <div class="proforma-number">N° PROFORMA: ${proformaNumber}</div>
                     <div class="proforma-number">Fecha: ${fechaActual}</div>
@@ -1073,13 +1084,13 @@
                 </div>
                 
                 <div class="proforma-table">
-                    <table class="proforma-table">
+                    <table>
                         <thead>
                             <tr>
                                 <th>Descripción</th>
                                 <th>Unidad</th>
                                 <th>Cantidad</th>
-                                <th>Precio Unitario (Bs)</th>
+                                <th>Precio Unit. (Bs)</th>
                                 <th>Subtotal (Bs)</th>
                             </tr>
                         </thead>
@@ -1123,182 +1134,467 @@
                 </div>
                 
                 <div class="proforma-footer">
-                    <p>yacuiba-bolivia</p>
+                    <p>Yacuiba - Bolivia</p>
                     <p>Proforma generada el ${fechaActual} - N° ${proformaNumber}</p>
                 </div>
             `;
             
-            // Mostrar la proforma en el contenedor de previsualización
             document.getElementById('proformaPreview').innerHTML = proformaHTML;
-            
-            // Habilitar botones de descarga
             document.getElementById('downloadPdfBtn').disabled = false;
             document.getElementById('downloadWordBtn').disabled = false;
-            
-            // Mostrar mensaje de éxito
             document.getElementById('successMessage').classList.remove('hidden');
             document.getElementById('errorMessage').classList.add('hidden');
-            
-            // Marcar como generada
             proformaGenerated = true;
             
-            // Animación de fade-in
             const previewContainer = document.getElementById('proformaPreview');
             previewContainer.classList.add('fade-in');
         }
         
-        // Función para descargar PDF
         async function downloadPDF() {
             if (!proformaGenerated) {
                 alert("Por favor, genere primero la proforma.");
                 return;
             }
 
-            // Mostrar spinner en el botón
             const pdfBtn = document.getElementById('downloadPdfBtn');
             const originalText = pdfBtn.innerHTML;
             pdfBtn.innerHTML = '<span class="spinner"></span> Generando PDF...';
             pdfBtn.disabled = true;
 
-            if (typeof html2pdf === 'undefined') {
-                alert("Error: Las librerías necesarias para generar PDF no están disponibles. Verifique su conexión.");
-                pdfBtn.innerHTML = originalText;
-                pdfBtn.disabled = false;
-                return;
-            }
-
             try {
-                // 1. Seleccionar el elemento original
-                const element = document.querySelector('.proforma-preview-container');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
                 
-                // 2. CLONAR el elemento para aislarlo de estilos de página y scroll
-                const clone = element.cloneNode(true);
+                const emisorNIT = document.getElementById('emisorNIT').value.trim();
+                const destinatarioNombre = document.getElementById('destinatarioNombre').value.trim();
+                const destinatarioCINIT = document.getElementById('destinatarioCINIT').value.trim();
+                const destinatarioTelefono = document.getElementById('destinatarioTelefono').value.trim();
+                const plazoEntrega = document.getElementById('plazoEntrega').value;
+                const garantia = document.getElementById('garantia').value;
+                const validezOferta = document.getElementById('validezOferta').value;
+                const lugarEntrega = document.getElementById('lugarEntrega').value;
+                const metodoPago = document.getElementById('metodoPago').value;
+                const observaciones = document.getElementById('observaciones').value.trim();
                 
-                // 3. Limpiar el clon (quitar animaciones, sombras, márgenes externos)
-                clone.classList.remove('fade-in');
+                const { subtotal, descuentoMonto, recargoMonto, total } = calculateTotals();
+                const fechaActual = dateFormatter.format(new Date());
                 
-                // Eliminar animaciones de los hijos para evitar que salgan con opacidad baja (efecto niebla blanca)
-                const animatedChildren = clone.querySelectorAll('.fade-in');
-                animatedChildren.forEach(child => child.classList.remove('fade-in'));
-
-                // --- CONFIGURACIÓN DE ANCHO FIJO PARA EVITAR RECORTES ---
-                // Usamos un ancho virtual de 800px (simulando escritorio) para que todo quepa bien.
-                // html2pdf ajustará esto automáticamente al tamaño A4 sin recortar nada.
-                const virtualWidth = 794; // 210mm a 96dpi
-
-                clone.style.margin = '0';
-                clone.style.padding = '20px'; // Mantenemos padding para que se vea elegante como el panel
-                clone.style.boxShadow = 'none';
-                clone.style.border = 'none';
+                const pageWidth = 210;
+                const pageHeight = 297;
+                const margin = 20;
+                let yPos = margin;
                 
-                // Forzar ancho fijo en píxeles (Solución definitiva al recorte)
-                clone.style.width = virtualWidth + 'px';
-                clone.style.maxWidth = 'none';
+                pdf.setFillColor(85, 107, 47);
+                pdf.circle(pageWidth / 2, yPos + 10, 8, 'F');
+                pdf.setTextColor(255, 255, 255);
+                pdf.setFontSize(14);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('FM', pageWidth / 2, yPos + 13, { align: 'center' });
                 
-                // Neutralizar min-width de tablas para evitar cortes
-                clone.querySelectorAll('table').forEach(t => {
-                    t.style.minWidth = '0'; // Forzar a 0 es más seguro que unset
-                    t.style.width = '100%';
+                yPos += 25;
+                pdf.setTextColor(85, 107, 47);
+                pdf.setFontSize(24);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('PROFORMA', pageWidth / 2, yPos, { align: 'center' });
+                
+                yPos += 10;
+                pdf.setTextColor(102, 102, 102);
+                pdf.setFontSize(12);
+                pdf.setFont(undefined, 'normal');
+                pdf.text(`N° PROFORMA: ${proformaNumber}`, pageWidth / 2, yPos, { align: 'center' });
+                
+                yPos += 6;
+                pdf.text(`Fecha: ${fechaActual}`, pageWidth / 2, yPos, { align: 'center' });
+                
+                yPos += 10;
+                pdf.setDrawColor(85, 107, 47);
+                pdf.setLineWidth(1);
+                pdf.line(margin, yPos, pageWidth - margin, yPos);
+                
+                yPos += 10;
+                pdf.setFillColor(245, 245, 245);
+                pdf.rect(margin, yPos, pageWidth - 2 * margin, 8, 'F');
+                pdf.setDrawColor(85, 107, 47);
+                pdf.setLineWidth(2);
+                pdf.line(margin, yPos, margin, yPos + 8);
+                pdf.setTextColor(51, 51, 51);
+                pdf.setFontSize(11);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('DATOS DEL EMISOR', margin + 3, yPos + 5.5);
+                
+                yPos += 12;
+                pdf.setFontSize(10);
+                pdf.setFont(undefined, 'normal');
+                pdf.setTextColor(34, 34, 34);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Nombre:', margin, yPos);
+                pdf.setFont(undefined, 'normal');
+                pdf.text('FRANZ RAFAEL MANGUIA IÑIGUEZ', margin + 25, yPos);
+                
+                yPos += 6;
+                pdf.setFont(undefined, 'bold');
+                pdf.text('CI:', margin, yPos);
+                pdf.setFont(undefined, 'normal');
+                pdf.text('5045135', margin + 25, yPos);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Celular:', margin + 70, yPos);
+                pdf.setFont(undefined, 'normal');
+                pdf.text('72971268', margin + 92, yPos);
+                
+                yPos += 6;
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Barrio:', margin, yPos);
+                pdf.setFont(undefined, 'normal');
+                pdf.text('Barrio San Gerónimo', margin + 25, yPos);
+                
+                if (emisorNIT) {
+                    yPos += 6;
+                    pdf.setFont(undefined, 'bold');
+                    pdf.text('NIT Empresa:', margin, yPos);
+                    pdf.setFont(undefined, 'normal');
+                    pdf.text(emisorNIT, margin + 32, yPos);
+                }
+                
+                yPos += 10;
+                pdf.setFillColor(245, 245, 245);
+                pdf.rect(margin, yPos, pageWidth - 2 * margin, 8, 'F');
+                pdf.setDrawColor(85, 107, 47);
+                pdf.setLineWidth(2);
+                pdf.line(margin, yPos, margin, yPos + 8);
+                pdf.setTextColor(51, 51, 51);
+                pdf.setFontSize(11);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('DATOS DEL DESTINATARIO', margin + 3, yPos + 5.5);
+                
+                yPos += 12;
+                pdf.setFontSize(10);
+                pdf.setFont(undefined, 'normal');
+                pdf.setTextColor(34, 34, 34);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Nombre/Razón Social:', margin, yPos);
+                pdf.setFont(undefined, 'normal');
+                
+                const maxWidth = pageWidth - 2 * margin - 45;
+                const splitNombre = pdf.splitTextToSize(destinatarioNombre, maxWidth);
+                pdf.text(splitNombre, margin + 45, yPos);
+                yPos += splitNombre.length * 6;
+                
+                if (destinatarioCINIT) {
+                    pdf.setFont(undefined, 'bold');
+                    pdf.text('CI/NIT:', margin, yPos);
+                    pdf.setFont(undefined, 'normal');
+                    pdf.text(destinatarioCINIT, margin + 25, yPos);
+                    yPos += 6;
+                }
+                
+                if (destinatarioTelefono) {
+                    pdf.setFont(undefined, 'bold');
+                    pdf.text('Teléfono:', margin, yPos);
+                    pdf.setFont(undefined, 'normal');
+                    pdf.text(destinatarioTelefono, margin + 25, yPos);
+                    yPos += 6;
+                }
+                
+                yPos += 5;
+                const validItems = items.filter(item => item.cantidad > 0 && item.precioUnitario > 0);
+                
+                const headers = ['Descripción', 'Unidad', 'Cantidad', 'Precio Unit.', 'Subtotal'];
+                const colWidths = [70, 20, 20, 30, 30];
+                const startX = margin;
+                
+                pdf.setFillColor(85, 107, 47);
+                pdf.rect(startX, yPos, pageWidth - 2 * margin, 8, 'F');
+                
+                pdf.setTextColor(255, 255, 255);
+                pdf.setFontSize(9);
+                pdf.setFont(undefined, 'bold');
+                let xPos = startX + 2;
+                headers.forEach((header, i) => {
+                    pdf.text(header, xPos, yPos + 5.5);
+                    xPos += colWidths[i];
                 });
                 
-                // 4. Crear un contenedor temporal invisible para el usuario pero visible para el render
-                const container = document.createElement('div');
-                container.style.position = 'fixed';
-                container.style.top = '0';
-                container.style.left = '0';
-                container.style.width = virtualWidth + 'px'; // Coincidir con el ancho virtual
-                container.style.zIndex = '-9999'; // Detrás de todo
-                container.style.backgroundColor = '#ffffff'; // Fondo blanco
+                yPos += 8;
+                pdf.setTextColor(34, 34, 34);
+                pdf.setFont(undefined, 'normal');
+                pdf.setFontSize(8);
                 
-                container.appendChild(clone);
-                document.body.appendChild(container);
-
-                // 5. Configuración optimizada
-                const opt = {
-                    margin:       [20, 20, 20, 20], // Márgenes: top, left, bottom, right (2cm)
-                    filename: `proforma-${proformaNumber}.pdf`,
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { 
-                        scale: 2, 
-                        useCORS: true,
-                        scrollY: 0, // CRÍTICO: Evita que el PDF salga en blanco si se ha hecho scroll
-                        windowWidth: virtualWidth // Importante: Coincidir con el ancho de 800px
-                    },
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                };
-
-                // 6. Generar y guardar
-                await html2pdf().set(opt).from(clone).save();
+                validItems.forEach((item, index) => {
+                    if (yPos > pageHeight - 50) {
+                        pdf.addPage();
+                        yPos = margin;
+                    }
+                    
+                    xPos = startX + 2;
+                    
+                    const descLines = pdf.splitTextToSize(item.descripcion || 'Producto/Servicio metalúrgico', colWidths[0] - 4);
+                    const rowHeight = Math.max(6, descLines.length * 4);
+                    
+                    if (index % 2 === 0) {
+                        pdf.setFillColor(250, 250, 250);
+                        pdf.rect(startX, yPos, pageWidth - 2 * margin, rowHeight, 'F');
+                    }
+                    
+                    pdf.setDrawColor(224, 224, 224);
+                    pdf.line(startX, yPos + rowHeight, pageWidth - margin, yPos + rowHeight);
+                    
+                    pdf.text(descLines, xPos, yPos + 4);
+                    xPos += colWidths[0];
+                    
+                    pdf.text(item.unidad, xPos, yPos + 4);
+                    xPos += colWidths[1];
+                    
+                    pdf.text(String(item.cantidad), xPos, yPos + 4);
+                    xPos += colWidths[2];
+                    
+                    pdf.text(formatter.format(item.precioUnitario), xPos, yPos + 4);
+                    xPos += colWidths[3];
+                    
+                    pdf.text(formatter.format(item.subtotal), xPos, yPos + 4);
+                    
+                    yPos += rowHeight;
+                });
                 
-                // 7. Limpiar
-                document.body.removeChild(container);
+                yPos += 10;
+                const totalsX = pageWidth - margin - 70;
+                const totalsWidth = 70;
+                
+                pdf.setDrawColor(224, 224, 224);
+                pdf.rect(totalsX, yPos, totalsWidth, 6);
+                pdf.setFontSize(9);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Subtotal:', totalsX + 2, yPos + 4);
+                pdf.setFont(undefined, 'normal');
+                pdf.text(formatter.format(subtotal), totalsX + totalsWidth - 2, yPos + 4, { align: 'right' });
+                yPos += 6;
+                
+                if (descuentoMonto > 0) {
+                    pdf.rect(totalsX, yPos, totalsWidth, 6);
+                    pdf.setFont(undefined, 'bold');
+                    pdf.text(`Descuento (${document.getElementById('descuento').value}%):`, totalsX + 2, yPos + 4);
+                    pdf.setFont(undefined, 'normal');
+                    pdf.text(formatter.format(descuentoMonto), totalsX + totalsWidth - 2, yPos + 4, { align: 'right' });
+                    yPos += 6;
+                }
+                
+                if (recargoMonto > 0) {
+                    pdf.rect(totalsX, yPos, totalsWidth, 6);
+                    pdf.setFont(undefined, 'bold');
+                    pdf.text(`Recargo (${document.getElementById('recargo').value}%):`, totalsX + 2, yPos + 4);
+                    pdf.setFont(undefined, 'normal');
+                    pdf.text(formatter.format(recargoMonto), totalsX + totalsWidth - 2, yPos + 4, { align: 'right' });
+                    yPos += 6;
+                }
+                
+                pdf.setFillColor(245, 245, 245);
+                pdf.rect(totalsX, yPos, totalsWidth, 8, 'F');
+                pdf.setDrawColor(85, 107, 47);
+                pdf.rect(totalsX, yPos, totalsWidth, 8);
+                pdf.setFontSize(11);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Total:', totalsX + 2, yPos + 5.5);
+                pdf.text(formatter.format(total), totalsX + totalsWidth - 2, yPos + 5.5, { align: 'right' });
+                
+                yPos += 15;
+                
+                if (yPos > pageHeight - 60) {
+                    pdf.addPage();
+                    yPos = margin;
+                }
+                
+                pdf.setFillColor(245, 245, 245);
+                pdf.rect(margin, yPos, pageWidth - 2 * margin, 8, 'F');
+                pdf.setDrawColor(85, 107, 47);
+                pdf.setLineWidth(2);
+                pdf.line(margin, yPos, margin, yPos + 8);
+                pdf.setTextColor(51, 51, 51);
+                pdf.setFontSize(11);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('CONDICIONES Y OBSERVACIONES', margin + 3, yPos + 5.5);
+                
+                yPos += 12;
+                pdf.setFontSize(9);
+                pdf.setFont(undefined, 'normal');
+                pdf.setTextColor(34, 34, 34);
+                
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Plazo de entrega:', margin, yPos);
+                pdf.setFont(undefined, 'normal');
+                pdf.text(`${plazoEntrega} días`, margin + 40, yPos);
+                
+                yPos += 6;
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Garantía:', margin, yPos);
+                pdf.setFont(undefined, 'normal');
+                pdf.text(`${garantia} meses`, margin + 40, yPos);
+                
+                yPos += 6;
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Validez de la oferta:', margin, yPos);
+                pdf.setFont(undefined, 'normal');
+                pdf.text(`${validezOferta} días`, margin + 40, yPos);
+                
+                yPos += 6;
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Método de pago:', margin, yPos);
+                pdf.setFont(undefined, 'normal');
+                pdf.text(metodoPago, margin + 40, yPos);
+                
+                yPos += 6;
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Lugar de entrega:', margin, yPos);
+                pdf.setFont(undefined, 'normal');
+                const splitLugar = pdf.splitTextToSize(lugarEntrega, pageWidth - 2 * margin - 40);
+                pdf.text(splitLugar, margin + 40, yPos);
+                yPos += splitLugar.length * 6;
+                
+                if (observaciones) {
+                    yPos += 2;
+                    pdf.setFont(undefined, 'bold');
+                    pdf.text('Observaciones:', margin, yPos);
+                    yPos += 6;
+                    pdf.setFont(undefined, 'normal');
+                    const splitObs = pdf.splitTextToSize(observaciones, pageWidth - 2 * margin);
+                    pdf.text(splitObs, margin, yPos);
+                    yPos += splitObs.length * 5;
+                }
+                
+                const footerY = pageHeight - 20;
+                pdf.setDrawColor(224, 224, 224);
+                pdf.line(margin, footerY, pageWidth - margin, footerY);
+                
+                pdf.setTextColor(102, 102, 102);
+                pdf.setFontSize(8);
+                pdf.setFont(undefined, 'normal');
+                pdf.text('Yacuiba - Bolivia', pageWidth / 2, footerY + 5, { align: 'center' });
+                pdf.text(`Proforma generada el ${fechaActual} - N° ${proformaNumber}`, pageWidth / 2, footerY + 10, { align: 'center' });
+                
+                pdf.save(`proforma-${proformaNumber}.pdf`);
+                
             } catch (error) {
                 console.error('Error al generar PDF:', error);
-                alert("Error al generar el PDF. Intente nuevamente.");
+                alert('Error al generar el PDF. Por favor, intente usar la opción de Imprimir o descargar en Word.');
             } finally {
                 pdfBtn.innerHTML = originalText;
                 pdfBtn.disabled = false;
             }
         }
         
-        // Función para descargar Word como un archivo .docx compatible
         function downloadWord() {
             if (!proformaGenerated) {
                 alert("Por favor, genere primero la proforma.");
                 return;
             }
             
-            // Mostrar spinner en el botón
             const wordBtn = document.getElementById('downloadWordBtn');
             const originalText = wordBtn.innerHTML;
             wordBtn.innerHTML = '<span class="spinner"></span> Generando Word...';
             wordBtn.disabled = true;
             
-            // Usamos setTimeout para dar tiempo al navegador a mostrar el spinner
             setTimeout(() => {
                 try {
-                    // 1. Obtener el HTML
                     const proformaHTML = document.getElementById('proformaPreview').innerHTML;
                     
-                    // 2. Extraer y procesar estilos CSS de forma segura
-                    let css = '';
-                    const styleSheets = Array.from(document.styleSheets);
-                    styleSheets.forEach(sheet => {
-                        try {
-                            // Evitar errores de seguridad con estilos externos
-                            if (sheet.href && !sheet.href.startsWith(window.location.origin)) return;
-                            
-                            const cssRules = Array.from(sheet.cssRules);
-                            cssRules.forEach(rule => {
-                                css += rule.cssText;
-                            });
-                        } catch (e) {
-                            console.warn('Saltando hoja de estilos protegida');
+                    const css = `
+                        body { 
+                            font-family: 'Segoe UI', 'Calibri', sans-serif; 
+                            color: #222222; 
+                            line-height: 1.6;
+                            font-size: 11pt;
                         }
-                    });
+                        table { 
+                            border-collapse: collapse; 
+                            width: 100%; 
+                            margin: 20px 0;
+                            page-break-inside: avoid;
+                        }
+                        th, td { 
+                            border: 1px solid #dddddd; 
+                            padding: 8px; 
+                            text-align: left;
+                            font-size: 10pt;
+                        }
+                        th { 
+                            background-color: #556B2F; 
+                            color: white;
+                            font-weight: bold;
+                        }
+                        h3 { 
+                            background-color: #f5f5f5; 
+                            padding: 8px 12px; 
+                            border-left: 4px solid #556B2F;
+                            margin: 15px 0 10px 0;
+                            font-size: 12pt;
+                            color: #333333;
+                        }
+                        .proforma-title { 
+                            font-size: 24pt; 
+                            font-weight: bold; 
+                            color: #556B2F;
+                            text-align: center;
+                            margin: 10px 0;
+                        }
+                        .proforma-number {
+                            font-size: 11pt;
+                            color: #666666;
+                            text-align: center;
+                            margin: 5px 0;
+                        }
+                        .proforma-header { 
+                            text-align: center; 
+                            border-bottom: 3px solid #556B2F; 
+                            padding-bottom: 15px; 
+                            margin-bottom: 20px;
+                        }
+                        .proforma-emisor, .proforma-destinatario, .proforma-observaciones {
+                            margin-bottom: 20px;
+                            page-break-inside: avoid;
+                        }
+                        .proforma-emisor p, .proforma-destinatario p, .proforma-observaciones p {
+                            margin: 5px 0;
+                            font-size: 10pt;
+                        }
+                        .proforma-totales {
+                            margin-top: 20px;
+                            text-align: right;
+                        }
+                        .proforma-totales table {
+                            width: 300px;
+                            margin-left: auto;
+                            border: 1px solid #e0e0e0;
+                        }
+                        .proforma-totales td {
+                            padding: 8px 12px;
+                            border-bottom: 1px solid #e0e0e0;
+                        }
+                        .proforma-totales tr:last-child {
+                            font-weight: bold;
+                            font-size: 12pt;
+                            background-color: rgba(85, 107, 47, 0.1);
+                        }
+                        .proforma-footer {
+                            margin-top: 30px;
+                            text-align: center;
+                            color: #666666;
+                            font-size: 9pt;
+                            padding-top: 15px;
+                            border-top: 1px solid #e0e0e0;
+                        }
+                        strong {
+                            font-weight: bold;
+                        }
+                        .proforma-logo {
+                            text-align: center;
+                            margin-bottom: 10px;
+                        }
+                    `;
 
-                    // 3. Reemplazar variables CSS por colores fijos para Word
-                    // Word no soporta var(--color), así que los reemplazamos manualmente
-                    css = css.replace(/var\(--primary-color\)/g, '#556B2F')
-                             .replace(/var\(--secondary-color\)/g, '#333333')
-                             .replace(/var\(--light-gray\)/g, '#f5f5f5')
-                             .replace(/var\(--medium-gray\)/g, '#e0e0e0')
-                             .replace(/var\(--dark-gray\)/g, '#666666')
-                             .replace(/var\(--text-color\)/g, '#222222');
-
-                    // 4. Construir el documento HTML completo
                     const content = `
                         <!DOCTYPE html>
                         <html>
                         <head>
                             <meta charset="UTF-8">
-                            <style>
-                                body { font-family: 'Segoe UI', sans-serif; color: #222; }
-                                table { border-collapse: collapse; width: 100%; }
-                                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                                th { background-color: #f2f2f2; }
-                                ${css}
-                            </style>
+                            <style>${css}</style>
                         </head>
                         <body>
                             ${proformaHTML}
@@ -1306,11 +1602,13 @@
                         </html>
                     `;
 
-                    // 5. Verificar librerías
-                    if (typeof htmlDocx === 'undefined') throw new Error('Librería html-docx no cargada');
-                    if (typeof saveAs === 'undefined') throw new Error('Librería FileSaver no cargada');
+                    if (typeof htmlDocx === 'undefined') {
+                        throw new Error('Librería html-docx no cargada. Verifique su conexión a internet.');
+                    }
+                    if (typeof saveAs === 'undefined') {
+                        throw new Error('Librería FileSaver no cargada. Verifique su conexión a internet.');
+                    }
 
-                    // 6. Convertir y Guardar
                     const converted = htmlDocx.asBlob(content, {
                         orientation: 'portrait',
                         margins: { top: 720, right: 720, bottom: 720, left: 720 }
@@ -1320,16 +1618,14 @@
 
                 } catch (error) {
                     console.error('Error al generar Word:', error);
-                    alert('Error al generar el archivo Word. Verifique su conexión a internet para cargar las librerías.');
+                    alert('Error al generar el archivo Word. Verifique su conexión a internet para cargar las librerías necesarias.');
                 } finally {
-                    // Restaurar botón
                     wordBtn.innerHTML = originalText;
                     wordBtn.disabled = false;
                 }
             }, 100);
         }
         
-        // Función para imprimir la proforma
         function printProforma() {
             if (!proformaGenerated) {
                 alert("Por favor, genere primero la proforma.");

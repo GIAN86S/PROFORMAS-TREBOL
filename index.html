@@ -1094,22 +1094,29 @@
             }
 
             try {
-                // 1. Usar el elemento original directamente (sin clonar ni ocultar)
-                const element = document.getElementById('proformaPreview');
+                // SOLUCIÓN 1: Seleccionar el CONTENEDOR PADRE (.proforma-preview-container)
+                // Esto asegura que se capture el fondo blanco, bordes y padding correctamente.
+                const element = document.querySelector('.proforma-preview-container');
                 
-                // 2. Configuración optimizada
+                // SOLUCIÓN 2: Forzar visibilidad explícita
+                // Esto evita conflictos con @media print o estilos heredados que puedan ocultar el contenido al renderizar.
+                element.style.visibility = 'visible';
+                
+                // SOLUCIÓN 3: Configuración optimizada con fondo blanco y ancho correcto
                 const opt = {
                     margin:       10, // Margen estándar
                     filename: `proforma-${proformaNumber}.pdf`,
                     image: { type: 'jpeg', quality: 0.98 },
                     html2canvas:  { 
                         scale: 2, 
-                        useCORS: true
+                        useCORS: true,
+                        backgroundColor: '#ffffff', // Fondo blanco explícito para evitar transparencias negras/vacías
+                        windowWidth: element.scrollWidth // Asegura que capture el ancho completo
                     },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
 
-                // 3. Generar y guardar directamente
+                // Generar y guardar
                 await html2pdf().set(opt).from(element).save();
             } catch (error) {
                 console.error('Error al generar PDF:', error);

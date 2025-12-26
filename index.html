@@ -1094,15 +1094,33 @@
             }
 
             try {
-                // SOLUCIÓN 1: Seleccionar el CONTENEDOR PADRE (.proforma-preview-container)
-                // Esto asegura que se capture el fondo blanco, bordes y padding correctamente.
+                // 1. Seleccionar el elemento original
                 const element = document.querySelector('.proforma-preview-container');
                 
-                // SOLUCIÓN 2: Forzar visibilidad explícita
-                // Esto evita conflictos con @media print o estilos heredados que puedan ocultar el contenido al renderizar.
-                element.style.visibility = 'visible';
+                // 2. CLONAR el elemento para aislarlo de estilos de página y scroll
+                const clone = element.cloneNode(true);
                 
-                // SOLUCIÓN 3: Configuración optimizada con fondo blanco y ancho correcto
+                // 3. Limpiar el clon (quitar animaciones, sombras, márgenes externos)
+                clone.classList.remove('fade-in');
+                clone.style.margin = '0';
+                clone.style.padding = '20px';
+                clone.style.boxShadow = 'none';
+                clone.style.border = 'none';
+                clone.style.width = '100%';
+                
+                // 4. Crear un contenedor temporal invisible para el usuario pero visible para el render
+                const container = document.createElement('div');
+                container.style.position = 'fixed';
+                container.style.top = '0';
+                container.style.left = '0';
+                container.style.width = '210mm'; // Ancho A4
+                container.style.zIndex = '-9999'; // Detrás de todo
+                container.style.backgroundColor = '#ffffff'; // Fondo blanco
+                
+                container.appendChild(clone);
+                document.body.appendChild(container);
+
+                // 5. Configuración optimizada
                 const opt = {
                     margin:       10, // Margen estándar
                     filename: `proforma-${proformaNumber}.pdf`,
@@ -1110,14 +1128,17 @@
                     html2canvas:  { 
                         scale: 2, 
                         useCORS: true,
-                        backgroundColor: '#ffffff', // Fondo blanco explícito para evitar transparencias negras/vacías
-                        windowWidth: element.scrollWidth // Asegura que capture el ancho completo
+                        scrollY: 0, // CRÍTICO: Evita que el PDF salga en blanco si se ha hecho scroll
+                        windowWidth: 800 // Ancho base para asegurar layout de escritorio
                     },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
 
-                // Generar y guardar
-                await html2pdf().set(opt).from(element).save();
+                // 6. Generar y guardar
+                await html2pdf().set(opt).from(clone).save();
+                
+                // 7. Limpiar
+                document.body.removeChild(container);
             } catch (error) {
                 console.error('Error al generar PDF:', error);
                 alert("Error al generar el PDF. Intente nuevamente.");

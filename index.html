@@ -1102,6 +1102,11 @@
                 
                 // 3. Limpiar el clon (quitar animaciones, sombras, márgenes externos)
                 clone.classList.remove('fade-in');
+                
+                // Eliminar animaciones de los hijos para evitar que salgan con opacidad baja (efecto niebla blanca)
+                const animatedChildren = clone.querySelectorAll('.fade-in');
+                animatedChildren.forEach(child => child.classList.remove('fade-in'));
+
                 clone.style.margin = '0';
                 clone.style.padding = '20px';
                 clone.style.boxShadow = 'none';

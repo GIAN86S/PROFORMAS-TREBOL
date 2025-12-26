@@ -1089,40 +1089,49 @@
             }
 
             try {
-                // 1. Clonar el contenido de la proforma para no afectar la vista actual.
-                const proformaContent = document.getElementById('proformaPreview').cloneNode(true);
+                // 1. Clonar el contenido
+                const element = document.getElementById('proformaPreview');
+                const clone = element.cloneNode(true);
 
-                // 2. Crear un contenedor temporal con estilos explícitos para la captura.
-                const printContainer = document.createElement('div');
-                printContainer.style.position = 'absolute';
-                printContainer.style.left = '-9999px'; // Moverlo fuera de la pantalla
-                printContainer.style.width = '210mm'; // Ancho A4
-                printContainer.style.padding = '20mm 15mm'; // Padding para márgenes
-                printContainer.style.backgroundColor = 'white';
-                printContainer.style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
-                printContainer.appendChild(proformaContent);
-                document.body.appendChild(printContainer);
+                // 2. Crear un contenedor temporal visible pero detrás del contenido (z-index negativo)
+                // Usar position: fixed en lugar de absolute/-9999px evita problemas de páginas en blanco
+                const container = document.createElement('div');
+                container.style.position = 'fixed';
+                container.style.top = '0';
+                container.style.left = '0';
+                container.style.width = '210mm'; // Ancho A4
+                container.style.minHeight = '297mm';
+                container.style.zIndex = '-9999';
+                container.style.backgroundColor = 'white';
+                container.style.padding = '15mm'; // Margen interno
+                container.appendChild(clone);
+                document.body.appendChild(container);
 
-                // 3. Opciones para html2pdf
+                // 3. Configuración optimizada
                 const opt = {
-                    margin: 0, // Los márgenes ya están aplicados con el padding
+                    margin:       0, 
                     filename: `proforma-${proformaNumber}.pdf`,
                     image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 3, useCORS: true, letterRendering: true }, // Aumentar escala para máxima calidad
+                    html2canvas:  { 
+                        scale: 2, 
+                        useCORS: true, 
+                        letterRendering: true,
+                        scrollY: 0,
+                        windowWidth: 1200 // Asegura renderizado de escritorio
+                    },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
 
-                // 4. Generar el PDF desde el contenedor preparado
-                await html2pdf().from(printContainer).set(opt).save();
+                // 4. Generar y guardar
+                await html2pdf().from(container).set(opt).save();
 
-                // 5. Limpieza: eliminar el contenedor temporal
-                document.body.removeChild(printContainer);
+                // 5. Limpiar
+                document.body.removeChild(container);
 
             } catch (error) {
                 console.error('Error al generar PDF:', error);
                 alert("Error al generar el PDF. Intente nuevamente.");
             } finally {
-                // 6. Restaurar el botón, tanto si tuvo éxito como si falló.
                 pdfBtn.innerHTML = originalText;
                 pdfBtn.disabled = false;
             }

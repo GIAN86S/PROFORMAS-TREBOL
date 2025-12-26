@@ -673,6 +673,11 @@
         </footer>
     </div>
 
+    <!-- Librerías (Cargadas ANTES del script principal para evitar errores) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://unpkg.com/html-docx-js/dist/html-docx.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
     <script>
         // Variables globales
         let proformaNumber = localStorage.getItem('proformaNumber') || 1000;
@@ -1089,45 +1094,23 @@
             }
 
             try {
-                // 1. Clonar el contenido
+                // 1. Usar el elemento original directamente (sin clonar ni ocultar)
                 const element = document.getElementById('proformaPreview');
-                const clone = element.cloneNode(true);
-
-                // 2. Crear un contenedor temporal visible pero detrás del contenido (z-index negativo)
-                // Usar position: fixed en lugar de absolute/-9999px evita problemas de páginas en blanco
-                const container = document.createElement('div');
-                container.style.position = 'fixed';
-                container.style.top = '0';
-                container.style.left = '0';
-                container.style.width = '210mm'; // Ancho A4
-                container.style.minHeight = '297mm';
-                container.style.zIndex = '-9999';
-                container.style.backgroundColor = 'white';
-                container.style.padding = '15mm'; // Margen interno
-                container.appendChild(clone);
-                document.body.appendChild(container);
-
-                // 3. Configuración optimizada
+                
+                // 2. Configuración optimizada
                 const opt = {
-                    margin:       0, 
+                    margin:       10, // Margen estándar
                     filename: `proforma-${proformaNumber}.pdf`,
                     image: { type: 'jpeg', quality: 0.98 },
                     html2canvas:  { 
                         scale: 2, 
-                        useCORS: true, 
-                        letterRendering: true,
-                        scrollY: 0,
-                        windowWidth: 1200 // Asegura renderizado de escritorio
+                        useCORS: true
                     },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
 
-                // 4. Generar y guardar
-                await html2pdf().from(container).set(opt).save();
-
-                // 5. Limpiar
-                document.body.removeChild(container);
-
+                // 3. Generar y guardar directamente
+                await html2pdf().set(opt).from(element).save();
             } catch (error) {
                 console.error('Error al generar PDF:', error);
                 alert("Error al generar el PDF. Intente nuevamente.");
@@ -1234,11 +1217,6 @@
             
             window.print();
         }
-    </script>    
-    <!-- Librerías para generar PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <!-- Librerías para generar DOCX (Word) -->
-    <script src="https://unpkg.com/html-docx-js/dist/html-docx.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    </script>
 </body>
 </html>

@@ -1032,6 +1032,15 @@
             return isValid;
         }
         
+        function getBase64Image(img) {
+            var canvas = document.createElement("canvas");
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            return canvas.toDataURL("image/png");
+        }
+        
         function generateProforma() {
             if (!validateForm()) {
                 document.getElementById('errorMessage').classList.remove('hidden');
@@ -1056,11 +1065,22 @@
             
             const { subtotal, descuentoMonto, recargoMonto, total } = calculateTotals();
             const fechaActual = dateFormatter.format(new Date());
+            
+            // Convertir logo a Base64 para asegurar que se vea en Word y PDF
+            let logoSrc = "logo.png";
+            try {
+                const headerLogo = document.querySelector('.logo img');
+                if (headerLogo && headerLogo.complete && headerLogo.naturalHeight !== 0) {
+                    logoSrc = getBase64Image(headerLogo);
+                }
+            } catch (e) {
+                console.warn("No se pudo procesar el logo. Se usará la ruta original.", e);
+            }
 
             const proformaHTML = `
                 <div class="proforma-header fade-in">
                     <div class="proforma-logo">
-                        <img src="logo.png" alt="Logo" style="height: 70px; width: auto;">
+                        <img src="${logoSrc}" alt="Logo" style="height: 70px; width: auto;">
                     </div>
                     <div class="proforma-title">PROFORMA</div>
                     <div class="proforma-number">N° PROFORMA: ${proformaNumber}</div>
@@ -1184,14 +1204,22 @@
                 const margin = 20;
                 let yPos = margin;
                 
-                pdf.setFillColor(85, 107, 47);
-                pdf.circle(pageWidth / 2, yPos + 10, 8, 'F');
-                pdf.setTextColor(255, 255, 255);
-                pdf.setFontSize(14);
-                pdf.setFont(undefined, 'bold');
-                pdf.text('FM', pageWidth / 2, yPos + 13, { align: 'center' });
-                
-                yPos += 25;
+                // Agregar Logo (usando la imagen procesada en el preview)
+                try {
+                    const logoImg = document.querySelector('.proforma-logo img');
+                    if (logoImg) {
+                        const pdfLogoHeight = 25; // Altura fija en mm
+                        const ratio = (logoImg.naturalWidth && logoImg.naturalHeight) ? logoImg.naturalWidth / logoImg.naturalHeight : 1;
+                        const pdfLogoWidth = pdfLogoHeight * ratio;
+                        const xPosLogo = (pageWidth - pdfLogoWidth) / 2;
+                        pdf.addImage(logoImg.src, 'PNG', xPosLogo, yPos, pdfLogoWidth, pdfLogoHeight);
+                        yPos += pdfLogoHeight + 5;
+                    }
+                } catch (e) {
+                    console.error("Error al agregar logo al PDF:", e);
+                    yPos += 30; // Espacio de reserva si falla
+                }
+
                 pdf.setTextColor(85, 107, 47);
                 pdf.setFontSize(24);
                 pdf.setFont(undefined, 'bold');

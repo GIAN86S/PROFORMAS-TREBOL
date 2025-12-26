@@ -1521,7 +1521,16 @@
             
             setTimeout(() => {
                 try {
-                    const proformaHTML = document.getElementById('proformaPreview').innerHTML;
+                    // Crear un elemento temporal para modificar el tamaño del logo solo para Word
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = document.getElementById('proformaPreview').innerHTML;
+                    
+                    const logoImg = tempDiv.querySelector('.proforma-logo img');
+                    if (logoImg) {
+                        logoImg.style.height = '35px'; // Reducir a la mitad (de 70px a 35px)
+                    }
+
+                    const proformaHTML = tempDiv.innerHTML;
                     
                     const css = `
                         body { 

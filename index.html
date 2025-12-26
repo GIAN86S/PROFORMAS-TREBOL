@@ -1144,18 +1144,23 @@
                 const animatedChildren = clone.querySelectorAll('.fade-in');
                 animatedChildren.forEach(child => child.classList.remove('fade-in'));
 
+                // --- CONFIGURACIÓN DE ANCHO FIJO PARA EVITAR RECORTES ---
+                // Usamos un ancho virtual de 800px (simulando escritorio) para que todo quepa bien.
+                // html2pdf ajustará esto automáticamente al tamaño A4 sin recortar nada.
+                const virtualWidth = 800;
+
                 clone.style.margin = '0';
-                clone.style.padding = '0';
+                clone.style.padding = '20px'; // Mantenemos padding para que se vea elegante como el panel
                 clone.style.boxShadow = 'none';
                 clone.style.border = 'none';
                 
-                // CORRECCIÓN CRÍTICA: Forzar ancho útil A4 (170mm) en lugar de 100%
-                clone.style.width = '170mm';
-                clone.style.maxWidth = '170mm';
+                // Forzar ancho fijo en píxeles (Solución definitiva al recorte)
+                clone.style.width = virtualWidth + 'px';
+                clone.style.maxWidth = 'none';
                 
                 // Neutralizar min-width de tablas para evitar cortes
                 clone.querySelectorAll('table').forEach(t => {
-                    t.style.minWidth = 'unset';
+                    t.style.minWidth = '0'; // Forzar a 0 es más seguro que unset
                     t.style.width = '100%';
                 });
                 
@@ -1164,7 +1169,7 @@
                 container.style.position = 'fixed';
                 container.style.top = '0';
                 container.style.left = '0';
-                container.style.width = '170mm'; // Ancho A4 menos márgenes (210 - 20 - 20)
+                container.style.width = virtualWidth + 'px'; // Coincidir con el ancho virtual
                 container.style.zIndex = '-9999'; // Detrás de todo
                 container.style.backgroundColor = '#ffffff'; // Fondo blanco
                 
@@ -1180,7 +1185,7 @@
                         scale: 2, 
                         useCORS: true,
                         scrollY: 0, // CRÍTICO: Evita que el PDF salga en blanco si se ha hecho scroll
-                        windowWidth: 645 // 170mm * 3.78px/mm ≈ 645px (Ajustado al ancho útil)
+                        windowWidth: virtualWidth // Importante: Coincidir con el ancho de 800px
                     },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };

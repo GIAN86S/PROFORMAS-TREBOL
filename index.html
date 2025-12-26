@@ -415,6 +415,10 @@
             page-break-inside: avoid;
         }
         
+        .proforma-table tr {
+            page-break-inside: avoid;
+        }
+        
         /* ESTILOS DE IMPRESIÓN */
         @media print {
             body * {
@@ -444,6 +448,11 @@
                 background-color: var(--primary-color) !important;
                 color: white !important;
                 -webkit-print-color-adjust: exact;
+            }
+            
+            table {
+                min-width: auto !important;
+                width: 100% !important;
             }
         }
         
@@ -981,9 +990,30 @@
             // Obtener fecha actual formateada
             const fechaActual = dateFormatter.format(new Date());
             
+            // --- LÓGICA DE CAPTURA DE LOGO ---
+            // Capturamos el logo de la web y lo convertimos para que funcione en Word/PDF
+            let logoHtml = '';
+            const logoImg = document.querySelector('.logo img');
+            if (logoImg) {
+                let logoSrc = logoImg.src;
+                try {
+                    // Intentamos convertir a Base64 para máxima compatibilidad
+                    if (logoImg.complete && logoImg.naturalHeight !== 0) {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = logoImg.naturalWidth;
+                        canvas.height = logoImg.naturalHeight;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(logoImg, 0, 0);
+                        logoSrc = canvas.toDataURL('image/png');
+                    }
+                } catch (e) { console.warn('Usando imagen directa (sin Base64)'); }
+                logoHtml = `<div class="proforma-logo"><img src="${logoSrc}" style="height: 80px; width: auto;" alt="Logo"></div>`;
+            }
+
             // Generar HTML de la proforma
             const proformaHTML = `
                 <div class="proforma-header fade-in">
+                    ${logoHtml}
                     <div class="proforma-title">PROFORMA</div>
                     <div class="proforma-number">N° PROFORMA: ${proformaNumber}</div>
                     <div class="proforma-number">Fecha: ${fechaActual}</div>
@@ -1118,7 +1148,16 @@
                 clone.style.padding = '0';
                 clone.style.boxShadow = 'none';
                 clone.style.border = 'none';
-                clone.style.width = '100%';
+                
+                // CORRECCIÓN CRÍTICA: Forzar ancho útil A4 (170mm) en lugar de 100%
+                clone.style.width = '170mm';
+                clone.style.maxWidth = '170mm';
+                
+                // Neutralizar min-width de tablas para evitar cortes
+                clone.querySelectorAll('table').forEach(t => {
+                    t.style.minWidth = 'unset';
+                    t.style.width = '100%';
+                });
                 
                 // 4. Crear un contenedor temporal invisible para el usuario pero visible para el render
                 const container = document.createElement('div');

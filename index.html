@@ -408,6 +408,13 @@
             animation: fadeIn 0.5s ease-out;
         }
         
+        /* CONTROL DE PAGINACIÓN PARA PDF */
+        .proforma-table,
+        .proforma-totales,
+        .proforma-observaciones {
+            page-break-inside: avoid;
+        }
+        
         /* ESTILOS DE IMPRESIÓN */
         @media print {
             body * {
@@ -1108,7 +1115,7 @@
                 animatedChildren.forEach(child => child.classList.remove('fade-in'));
 
                 clone.style.margin = '0';
-                clone.style.padding = '20px';
+                clone.style.padding = '0';
                 clone.style.boxShadow = 'none';
                 clone.style.border = 'none';
                 clone.style.width = '100%';
@@ -1118,7 +1125,7 @@
                 container.style.position = 'fixed';
                 container.style.top = '0';
                 container.style.left = '0';
-                container.style.width = '210mm'; // Ancho A4
+                container.style.width = '170mm'; // Ancho A4 menos márgenes (210 - 20 - 20)
                 container.style.zIndex = '-9999'; // Detrás de todo
                 container.style.backgroundColor = '#ffffff'; // Fondo blanco
                 
@@ -1127,14 +1134,14 @@
 
                 // 5. Configuración optimizada
                 const opt = {
-                    margin:       10, // Margen estándar
+                    margin:       [20, 20, 20, 20], // Márgenes: top, left, bottom, right (2cm)
                     filename: `proforma-${proformaNumber}.pdf`,
                     image: { type: 'jpeg', quality: 0.98 },
                     html2canvas:  { 
                         scale: 2, 
                         useCORS: true,
                         scrollY: 0, // CRÍTICO: Evita que el PDF salga en blanco si se ha hecho scroll
-                        windowWidth: 800 // Ancho base para asegurar layout de escritorio
+                        windowWidth: 645 // 170mm * 3.78px/mm ≈ 645px (Ajustado al ancho útil)
                     },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };

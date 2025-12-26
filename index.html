@@ -1129,8 +1129,8 @@
         }
         
         // Función para descargar Word como un archivo .docx compatible
-        async function downloadWord() {
-             if (!proformaGenerated) {
+        function downloadWord() {
+            if (!proformaGenerated) {
                 alert("Por favor, genere primero la proforma.");
                 return;
             }
@@ -1141,32 +1141,79 @@
             wordBtn.innerHTML = '<span class="spinner"></span> Generando Word...';
             wordBtn.disabled = true;
             
-            try {
-                // Obtener el HTML de la previsualización
-                const proformaHTML = document.getElementById('proformaPreview').innerHTML;
-                
-                // Incluir los estilos directamente en el HTML para la conversión
-                const styles = Array.from(document.styleSheets).map(s => Array.from(s.cssRules).map(r => r.cssText).join('')).join('');
-                const fullHTML = `<style>${styles}</style>${proformaHTML}`;
-
-                // Usar la librería html-to-docx para generar un Blob de un DOCX válido
-                const fileBuffer = await htmlToDocx(fullHTML, null, {
-                    orientation: 'portrait',
-                    margins: { top: 720, right: 720, bottom: 720, left: 720 } // Márgenes en twips (1 pulgada = 1440 twips)
-                });
-
-                // Usar la librería FileSaver.js (incluida en html-to-docx) para guardar el archivo
-                saveAs(fileBuffer, `proforma-${proformaNumber}.docx`);
-            } catch (error) {
-                console.error('Error al generar el documento de Word:', error);
-                alert('Hubo un error al generar el archivo .docx. Por favor, intente de nuevo.');
-            }
-            
-            // Restaurar botón
+            // Usamos setTimeout para dar tiempo al navegador a mostrar el spinner
             setTimeout(() => {
-                wordBtn.innerHTML = originalText;
-                wordBtn.disabled = false;
-            }, 500);
+                try {
+                    // 1. Obtener el HTML
+                    const proformaHTML = document.getElementById('proformaPreview').innerHTML;
+                    
+                    // 2. Extraer y procesar estilos CSS de forma segura
+                    let css = '';
+                    const styleSheets = Array.from(document.styleSheets);
+                    styleSheets.forEach(sheet => {
+                        try {
+                            // Evitar errores de seguridad con estilos externos
+                            if (sheet.href && !sheet.href.startsWith(window.location.origin)) return;
+                            
+                            const cssRules = Array.from(sheet.cssRules);
+                            cssRules.forEach(rule => {
+                                css += rule.cssText;
+                            });
+                        } catch (e) {
+                            console.warn('Saltando hoja de estilos protegida');
+                        }
+                    });
+
+                    // 3. Reemplazar variables CSS por colores fijos para Word
+                    // Word no soporta var(--color), así que los reemplazamos manualmente
+                    css = css.replace(/var\(--primary-color\)/g, '#556B2F')
+                             .replace(/var\(--secondary-color\)/g, '#333333')
+                             .replace(/var\(--light-gray\)/g, '#f5f5f5')
+                             .replace(/var\(--medium-gray\)/g, '#e0e0e0')
+                             .replace(/var\(--dark-gray\)/g, '#666666')
+                             .replace(/var\(--text-color\)/g, '#222222');
+
+                    // 4. Construir el documento HTML completo
+                    const content = `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <meta charset="UTF-8">
+                            <style>
+                                body { font-family: 'Segoe UI', sans-serif; color: #222; }
+                                table { border-collapse: collapse; width: 100%; }
+                                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                                th { background-color: #f2f2f2; }
+                                ${css}
+                            </style>
+                        </head>
+                        <body>
+                            ${proformaHTML}
+                        </body>
+                        </html>
+                    `;
+
+                    // 5. Verificar librerías
+                    if (typeof htmlDocx === 'undefined') throw new Error('Librería html-docx no cargada');
+                    if (typeof saveAs === 'undefined') throw new Error('Librería FileSaver no cargada');
+
+                    // 6. Convertir y Guardar
+                    const converted = htmlDocx.asBlob(content, {
+                        orientation: 'portrait',
+                        margins: { top: 720, right: 720, bottom: 720, left: 720 }
+                    });
+
+                    saveAs(converted, `proforma-${proformaNumber}.docx`);
+
+                } catch (error) {
+                    console.error('Error al generar Word:', error);
+                    alert('Error al generar el archivo Word. Verifique su conexión a internet para cargar las librerías.');
+                } finally {
+                    // Restaurar botón
+                    wordBtn.innerHTML = originalText;
+                    wordBtn.disabled = false;
+                }
+            }, 100);
         }
         
         // Función para imprimir la proforma
@@ -1181,7 +1228,8 @@
     </script>    
     <!-- Librerías para generar PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <!-- Librería para generar DOCX desde HTML -->
-    <script src="https://unpkg.com/html-to-docx@1.8.0/dist/html-to-docx.js"></script>
+    <!-- Librerías para generar DOCX (Word) -->
+    <script src="https://unpkg.com/html-docx-js/dist/html-docx.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </body>
 </html>
